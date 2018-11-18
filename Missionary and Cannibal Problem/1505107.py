@@ -1,7 +1,10 @@
 # from dust i have come, dust i will be
 
 import time
+import sys
 
+# -------------------------------------------------------------------------
+# global variables
 boat_capacity = None
 missionary = None
 cannibal = None
@@ -22,8 +25,11 @@ openList = list()
 
 dx = []
 dy = []
+# -------------------------------------------------------------------------
 
 
+# -------------------------------------------------------------------------
+# state
 class state:
     def __init__(self, ml, cl, mr, cr, d):
         self.ml = ml
@@ -56,8 +62,11 @@ class state:
 
     def print(self):
         print(self.ml, self.cl, self.mr, self.cr)
+# -------------------------------------------------------------------------
 
 
+# -------------------------------------------------------------------------
+# run bfs
 def bfs():
     # d=0 for left->right, d=1 for right->left
     current_state = state(missionary, cannibal, 0, 0, 0)
@@ -107,8 +116,11 @@ def bfs():
                     if (new_state.isValid()) and (new_state not in closedList) and (new_state not in openList):
                         openList.append(new_state)
                         new_state.parent = current_state
+# -------------------------------------------------------------------------
 
 
+# -------------------------------------------------------------------------
+# dfs
 def dfs(current_state):
     global ans_found
     global goal
@@ -140,7 +152,12 @@ def dfs(current_state):
 
                 if (new_state.isValid()) and (new_state not in closedList):
                     new_state.parent = current_state
-                    dfs(new_state)
+                    
+                    try:
+                        dfs(new_state)
+                    except:
+                        timeout=True
+                        print("recursion depth exceeded-python has its recursion depth fixed 1000 to avoid stack overflow")
 
     else:
         for i in range(len(dx)):
@@ -153,9 +170,17 @@ def dfs(current_state):
 
                 if (new_state.isValid()) and (new_state not in closedList):
                     new_state.parent = current_state
-                    dfs(new_state)
+                    
+                    try:
+                        dfs(new_state)
+                    except:
+                        timeout=True
+                        print("recursion depth exceeded-python has its recursion depth fixed 1000 to avoid stack overflow")
+# -------------------------------------------------------------------------
 
 
+# -------------------------------------------------------------------------
+# driver function
 def solve():
     global ans_found
     global timeout
@@ -230,7 +255,7 @@ def solve():
             print(path[i - 1].ml, path[i - 1].cl, path[i - 1].mr, path[i - 1].cr)
     else:
         print("no solution")
-        # --------------------------------------------------------------------------
+# -------------------------------------------------------------------------
 
 
 if __name__ == "__main__":
@@ -244,6 +269,9 @@ if __name__ == "__main__":
         for j in range(i + 1):
             dx.append(j)
             dy.append(i - j)
+
+    #increase the recusion depth limit to 3000
+    sys.setrecursionlimit(3000);
 
     solve()
 
