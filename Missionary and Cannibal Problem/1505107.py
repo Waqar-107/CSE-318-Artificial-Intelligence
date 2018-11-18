@@ -13,12 +13,11 @@ ans_found = False
 timeout = False
 
 start_time = 0
-
 goal = None
 
-# after 40 seconds we would stop expanding and assume ans not found
-time_threshold = 60
-size_threshold = int(1e8)  # max size of nodes
+# after 30 seconds we would stop expanding and assume ans not found
+time_threshold = 30
+size_threshold = int(1e7)  # max size of nodes
 
 closedList = set()
 openList = list()
@@ -192,13 +191,14 @@ def solve():
     # bfs
     ans_found = False
     timeout = False
+    start_time=time.time()
 
     bfs()
 
     elapsed_time = time.time() - start_time
+
     print("time taken by bfs:", elapsed_time, " seconds. nodes expanded: ", len(closedList))
     if ans_found:
-        print("solution found")
         current_state = goal
 
         while current_state:
@@ -225,6 +225,7 @@ def solve():
     closedList.clear()
     current_state = state(missionary, cannibal, 0, 0, 0)
     start_time = time.time()
+
     ans_found = False
     timeout = False
     goal = None
@@ -232,7 +233,7 @@ def solve():
     dfs(current_state)
 
     elapsed_time = time.time() - start_time
-    print("time taken by dfs:", elapsed_time, "seconds. nodes expanded: ", len(closedList))
+    print("time taken by dfs:", elapsed_time, " miliseconds. nodes expanded: ", len(closedList))
     if ans_found:
         print("solution found")
         path.clear()
