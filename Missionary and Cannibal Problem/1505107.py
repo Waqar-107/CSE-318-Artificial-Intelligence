@@ -233,7 +233,7 @@ def solve():
     dfs(current_state)
 
     elapsed_time = time.time() - start_time
-    print("time taken by dfs:", elapsed_time, " miliseconds. nodes expanded: ", len(closedList))
+    print("time taken by dfs:", elapsed_time, " seconds. nodes expanded: ", len(closedList))
     if ans_found:
         print("solution found")
         path.clear()
