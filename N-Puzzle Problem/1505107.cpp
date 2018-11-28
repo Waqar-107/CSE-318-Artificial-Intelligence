@@ -114,31 +114,50 @@ int manhattanDist(node u, node g)
 
 int linearConflict(node u, node g)
 {
-    int cnt=0;
+    int cnt=0, tj, tk;
     bool f;
-    pp temp;
+    pp temp[u.n * u.n];
 
-    set<pp> s;
-    //----------------------------------------------------------
-    //line->row
-    for(int i=0; i<u.n; i++)
+    for(int i = 0; i< u.n; i++)
     {
-        for(int j=0; j<u.n; j++)
-        {
-            for(int k=j+1; k<u.n; k++)
-                s.insert({g.board[i][k],g.board[i][j]});
-        }
+        for(int j=0 ; j < u.n; j++)
+            temp[g.board[i][j]] = {i, j};
     }
 
-    for(int i=0; i<u.n; i++)
+    //conflict counting in the rows
+    for(int i = 0; i< u.n; i++)
     {
-        for(int j=0; j<u.n; j++)
+        for(int j = 0; j < u.n - 1; j++)
         {
+            tj = u.board[i][j];
+            for(int k = j + 1; k < u.n; k++)
+            {
+                tk = u.board[i][k];
 
+                //check if tj and tk are in goal row, then if tj is in right of tk
+                if(temp[tj].first == i && temp[tk].first == i && temp[tj].second > temp[tk].second)
+                    cout<<"conflict between "<<tj<<" and "<<tk<<endl, cnt++;
+            }
+        }
+
+    }
+
+    //conflict counting in the columns
+    for(int i = 0; i< u.n; i++)
+    {
+        for(int j = 0; j < u.n - 1; j++)
+        {
+            tj = u.board[j][i];
+            for(int k = j + 1; k < u.n; k++)
+            {
+                tk = u.board[k][i];
+
+                //check if tj and tk are in goal column, then if tj is downwards wrt tk
+                if(temp[tj].second == i && temp[tk].second == i && temp[tj].first > temp[tk].first)
+                    cout<<"conflict between "<<tj<<" and "<<tk<<endl, cnt++;
+            }
         }
     }
-    //----------------------------------------------------------
-
 
     return cnt;
 }
@@ -289,7 +308,7 @@ bool solvable(node u)
 int main()
 {
     freopen("in.txt", "r", stdin);
-    //freopen("out.txt","w",stdout);
+    freopen("out.txt","w",stdout);
 
     int i, j, k;
     int n, m;
@@ -319,7 +338,6 @@ int main()
         }
 
         goalNode.board[n - 1][n - 1] = 0;
-        //cout<<linearConflict(startNode,goalNode)<<endl;
 
         if (!solvable(startNode))
         {
@@ -329,7 +347,7 @@ int main()
 
         string h[]= {" Hamming\n"," Manhattan\n"," Linear Conflict\n"};
 
-        for(i=0; i<2; i++)
+        for(i=0; i<3; i++)
         {
             clr(); path.clear();
             printf("---------------------------------------\n");

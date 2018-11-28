@@ -12,6 +12,7 @@ cannibal = None
 ans_found = False
 timeout = False
 
+expandedNodes = 0
 start_time = 0
 goal = None
 
@@ -24,6 +25,8 @@ openList = list()
 
 dx = []
 dy = []
+
+
 # -------------------------------------------------------------------------
 
 
@@ -61,6 +64,8 @@ class state:
 
     def print(self):
         print(self.ml, self.cl, self.mr, self.cr)
+
+
 # -------------------------------------------------------------------------
 
 
@@ -74,6 +79,7 @@ def bfs():
     global start_time
     global ans_found
     global goal
+    global expandedNodes
 
     start_time = time.time()
 
@@ -96,6 +102,7 @@ def bfs():
             timeout = True
             break
 
+        expandedNodes += 1
         if current_state.d == 0:
             for i in range(len(dx)):
                 if current_state.ml - dx[i] >= 0 and current_state.cl - dy[i] >= 0:
@@ -115,6 +122,8 @@ def bfs():
                     if (new_state.isValid()) and (new_state not in closedList) and (new_state not in openList):
                         openList.append(new_state)
                         new_state.parent = current_state
+
+
 # -------------------------------------------------------------------------
 
 
@@ -151,12 +160,13 @@ def dfs(current_state):
 
                 if (new_state.isValid()) and (new_state not in closedList):
                     new_state.parent = current_state
-                    
+
                     try:
                         dfs(new_state)
                     except:
-                        timeout=True
-                        print("recursion depth exceeded-python has its recursion depth fixed 1000 to avoid stack overflow")
+                        timeout = True
+                        print(
+                            "recursion depth exceeded-python has its recursion depth fixed 1000 to avoid stack overflow")
 
     else:
         for i in range(len(dx)):
@@ -169,12 +179,15 @@ def dfs(current_state):
 
                 if (new_state.isValid()) and (new_state not in closedList):
                     new_state.parent = current_state
-                    
+
                     try:
                         dfs(new_state)
                     except:
-                        timeout=True
-                        print("recursion depth exceeded-python has its recursion depth fixed 1000 to avoid stack overflow")
+                        timeout = True
+                        print(
+                            "recursion depth exceeded-python has its recursion depth fixed 1000 to avoid stack overflow")
+
+
 # -------------------------------------------------------------------------
 
 
@@ -185,19 +198,21 @@ def solve():
     global timeout
     global start_time
     global goal
+    global expandedNodes
 
     path = []
     # --------------------------------------------------------------------------
     # bfs
     ans_found = False
     timeout = False
-    start_time=time.time()
+    start_time = time.time()
+    expandedNodes = 0
 
     bfs()
 
     elapsed_time = time.time() - start_time
 
-    print("time taken by bfs:", elapsed_time, " seconds. nodes expanded: ", len(closedList))
+    print("time taken by bfs:", elapsed_time, " seconds. nodes explored: ", len(closedList), "expanded:", expandedNodes)
     if ans_found:
         current_state = goal
 
@@ -233,7 +248,7 @@ def solve():
     dfs(current_state)
 
     elapsed_time = time.time() - start_time
-    print("time taken by dfs:", elapsed_time, " seconds. nodes expanded: ", len(closedList))
+    print("time taken by dfs:", elapsed_time, " seconds. nodes expanded and explored: ", len(closedList))
     if ans_found:
         print("solution found")
         path.clear()
@@ -256,6 +271,8 @@ def solve():
             print(path[i - 1].ml, path[i - 1].cl, path[i - 1].mr, path[i - 1].cr)
     else:
         print("no solution")
+
+
 # -------------------------------------------------------------------------
 
 
@@ -271,7 +288,7 @@ if __name__ == "__main__":
             dx.append(j)
             dy.append(i - j)
 
-    #increase the recusion depth limit to 3000
+    # increase the recusion depth limit to 3000
     sys.setrecursionlimit(3000);
 
     solve()
