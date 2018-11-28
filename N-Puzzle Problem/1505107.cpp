@@ -136,7 +136,7 @@ int linearConflict(node u, node g)
 
                 //check if tj and tk are in goal row, then if tj is in right of tk
                 if(temp[tj].first == i && temp[tk].first == i && temp[tj].second > temp[tk].second)
-                    cout<<"conflict between "<<tj<<" and "<<tk<<endl, cnt++;
+                    cnt++;
             }
         }
 
@@ -154,7 +154,7 @@ int linearConflict(node u, node g)
 
                 //check if tj and tk are in goal column, then if tj is downwards wrt tk
                 if(temp[tj].second == i && temp[tk].second == i && temp[tj].first > temp[tk].first)
-                    cout<<"conflict between "<<tj<<" and "<<tk<<endl, cnt++;
+                    cnt++;
             }
         }
     }
