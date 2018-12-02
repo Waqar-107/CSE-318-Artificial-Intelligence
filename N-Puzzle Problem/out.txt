@@ -1,55 +1,104 @@
+puzzle not solvable.
 ---------------------------------------
 heuristic : Hamming
-8 1 3 
-4 0 2 
-7 6 5 
+8 2 0 
+5 4 7 
+3 6 1 
 
-8 1 3 
-4 2 0 
-7 6 5 
+8 0 2 
+5 4 7 
+3 6 1 
 
-8 1 3 
-4 2 5 
-7 6 0 
+0 8 2 
+5 4 7 
+3 6 1 
 
-8 1 3 
-4 2 5 
-7 0 6 
+5 8 2 
+0 4 7 
+3 6 1 
 
-8 1 3 
-4 2 5 
-0 7 6 
+5 8 2 
+4 0 7 
+3 6 1 
 
-8 1 3 
-0 2 5 
+5 8 2 
+4 6 7 
+3 0 1 
+
+5 8 2 
+4 6 7 
+3 1 0 
+
+5 8 2 
+4 6 0 
+3 1 7 
+
+5 8 2 
+4 0 6 
+3 1 7 
+
+5 8 2 
+4 1 6 
+3 0 7 
+
+5 8 2 
+4 1 6 
+0 3 7 
+
+5 8 2 
+0 1 6 
+4 3 7 
+
+5 8 2 
+1 0 6 
+4 3 7 
+
+5 8 2 
+1 3 6 
+4 0 7 
+
+5 8 2 
+1 3 6 
+4 7 0 
+
+5 8 2 
+1 3 0 
 4 7 6 
 
-0 1 3 
-8 2 5 
-4 7 6 
-
+5 8 2 
 1 0 3 
-8 2 5 
 4 7 6 
 
-1 2 3 
-8 0 5 
+5 0 2 
+1 8 3 
 4 7 6 
 
-1 2 3 
-0 8 5 
+0 5 2 
+1 8 3 
 4 7 6 
 
-1 2 3 
-4 8 5 
+1 5 2 
+0 8 3 
+4 7 6 
+
+1 5 2 
+4 8 3 
 0 7 6 
 
-1 2 3 
-4 8 5 
+1 5 2 
+4 8 3 
 7 0 6 
 
-1 2 3 
-4 0 5 
+1 5 2 
+4 0 3 
+7 8 6 
+
+1 0 2 
+4 5 3 
+7 8 6 
+
+1 2 0 
+4 5 3 
 7 8 6 
 
 1 2 3 
@@ -61,62 +110,110 @@ heuristic : Hamming
 7 8 0 
 
 analysis--->
-cost : 14
-nodes expanded : 491
-nodes explored: 495
+cost : 26
+nodes expanded : 50868
+nodes explored: 50982
 ---------------------------------------
 ---------------------------------------
 heuristic : Manhattan
-8 1 3 
-4 0 2 
-7 6 5 
+8 2 0 
+5 4 7 
+3 6 1 
 
-8 1 3 
-4 2 0 
-7 6 5 
+8 0 2 
+5 4 7 
+3 6 1 
 
-8 1 3 
-4 2 5 
-7 6 0 
+0 8 2 
+5 4 7 
+3 6 1 
 
-8 1 3 
-4 2 5 
-7 0 6 
+5 8 2 
+0 4 7 
+3 6 1 
 
-8 1 3 
-4 2 5 
-0 7 6 
+5 8 2 
+4 0 7 
+3 6 1 
 
-8 1 3 
-0 2 5 
+5 8 2 
+4 6 7 
+3 0 1 
+
+5 8 2 
+4 6 7 
+3 1 0 
+
+5 8 2 
+4 6 0 
+3 1 7 
+
+5 8 2 
+4 0 6 
+3 1 7 
+
+5 8 2 
+4 1 6 
+3 0 7 
+
+5 8 2 
+4 1 6 
+0 3 7 
+
+5 8 2 
+0 1 6 
+4 3 7 
+
+5 8 2 
+1 0 6 
+4 3 7 
+
+5 8 2 
+1 3 6 
+4 0 7 
+
+5 8 2 
+1 3 6 
+4 7 0 
+
+5 8 2 
+1 3 0 
 4 7 6 
 
-0 1 3 
-8 2 5 
-4 7 6 
-
+5 8 2 
 1 0 3 
-8 2 5 
 4 7 6 
 
-1 2 3 
-8 0 5 
+5 0 2 
+1 8 3 
 4 7 6 
 
-1 2 3 
-0 8 5 
+0 5 2 
+1 8 3 
 4 7 6 
 
-1 2 3 
-4 8 5 
+1 5 2 
+0 8 3 
+4 7 6 
+
+1 5 2 
+4 8 3 
 0 7 6 
 
-1 2 3 
-4 8 5 
+1 5 2 
+4 8 3 
 7 0 6 
 
-1 2 3 
-4 0 5 
+1 5 2 
+4 0 3 
+7 8 6 
+
+1 0 2 
+4 5 3 
+7 8 6 
+
+1 2 0 
+4 5 3 
 7 8 6 
 
 1 2 3 
@@ -128,142 +225,110 @@ heuristic : Manhattan
 7 8 0 
 
 analysis--->
-cost : 14
-nodes expanded : 128
-nodes explored: 129
+cost : 26
+nodes expanded : 2577
+nodes explored: 2624
 ---------------------------------------
 ---------------------------------------
 heuristic : Linear Conflict
-conflict between 0 and 7
-conflict between 0 and 3
-conflict between 0 and 7
-conflict between 0 and 3
-conflict between 5 and 2
-conflict between 0 and 7
-conflict between 5 and 2
-conflict between 0 and 6
-conflict between 3 and 2
-conflict between 5 and 2
-conflict between 0 and 6
-conflict between 0 and 6
-conflict between 8 and 5
-conflict between 0 and 6
-conflict between 8 and 2
-conflict between 2 and 1
-conflict between 8 and 2
-conflict between 4 and 1
-conflict between 0 and 7
-conflict between 0 and 3
-conflict between 0 and 7
-conflict between 3 and 2
-conflict between 0 and 6
-conflict between 0 and 6
-conflict between 0 and 6
-conflict between 0 and 6
-conflict between 0 and 7
-conflict between 3 and 2
-conflict between 3 and 2
-conflict between 3 and 2
-conflict between 3 and 2
-conflict between 3 and 2
-conflict between 0 and 7
-conflict between 2 and 1
-conflict between 2 and 1
-conflict between 2 and 1
-conflict between 2 and 1
-conflict between 2 and 1
-conflict between 0 and 7
-conflict between 2 and 1
-conflict between 0 and 3
-conflict between 6 and 5
-conflict between 0 and 3
-conflict between 5 and 2
-conflict between 0 and 3
-conflict between 0 and 6
-conflict between 0 and 6
-conflict between 8 and 5
-conflict between 4 and 1
-conflict between 4 and 1
-conflict between 4 and 1
-conflict between 8 and 2
-conflict between 4 and 1
-conflict between 8 and 5
-conflict between 0 and 7
-conflict between 4 and 1
-conflict between 4 and 1
-conflict between 0 and 3
-conflict between 0 and 7
-conflict between 0 and 7
-conflict between 0 and 3
-conflict between 8 and 5
-conflict between 5 and 2
-conflict between 0 and 7
-conflict between 5 and 2
-conflict between 0 and 6
-conflict between 8 and 2
-conflict between 3 and 2
-conflict between 3 and 2
-conflict between 3 and 2
-conflict between 3 and 2
-conflict between 3 and 2
-conflict between 0 and 7
-conflict between 3 and 2
-conflict between 0 and 3
-conflict between 0 and 6
-conflict between 0 and 7
-conflict between 0 and 6
-conflict between 0 and 3
-conflict between 0 and 6
-8 1 3 
-4 0 2 
-7 6 5 
+8 2 0 
+5 4 7 
+3 6 1 
 
-8 1 3 
-4 2 0 
-7 6 5 
+8 0 2 
+5 4 7 
+3 6 1 
 
-8 1 3 
-4 2 5 
-7 6 0 
+0 8 2 
+5 4 7 
+3 6 1 
 
-8 1 3 
-4 2 5 
-7 0 6 
+5 8 2 
+0 4 7 
+3 6 1 
 
-8 1 3 
-4 2 5 
-0 7 6 
+5 8 2 
+4 0 7 
+3 6 1 
 
-8 1 3 
-0 2 5 
+5 8 2 
+4 6 7 
+3 0 1 
+
+5 8 2 
+4 6 7 
+3 1 0 
+
+5 8 2 
+4 6 0 
+3 1 7 
+
+5 8 2 
+4 0 6 
+3 1 7 
+
+5 8 2 
+4 1 6 
+3 0 7 
+
+5 8 2 
+4 1 6 
+0 3 7 
+
+5 8 2 
+0 1 6 
+4 3 7 
+
+5 8 2 
+1 0 6 
+4 3 7 
+
+5 8 2 
+1 3 6 
+4 0 7 
+
+5 8 2 
+1 3 6 
+4 7 0 
+
+5 8 2 
+1 3 0 
 4 7 6 
 
-0 1 3 
-8 2 5 
-4 7 6 
-
+5 8 2 
 1 0 3 
-8 2 5 
 4 7 6 
 
-1 2 3 
-8 0 5 
+5 0 2 
+1 8 3 
 4 7 6 
 
-1 2 3 
-0 8 5 
+0 5 2 
+1 8 3 
 4 7 6 
 
-1 2 3 
-4 8 5 
+1 5 2 
+0 8 3 
+4 7 6 
+
+1 5 2 
+4 8 3 
 0 7 6 
 
-1 2 3 
-4 8 5 
+1 5 2 
+4 8 3 
 7 0 6 
 
-1 2 3 
-4 0 5 
+1 5 2 
+4 0 3 
+7 8 6 
+
+1 0 2 
+4 5 3 
+7 8 6 
+
+1 2 0 
+4 5 3 
 7 8 6 
 
 1 2 3 
@@ -275,9 +340,9 @@ conflict between 0 and 6
 7 8 0 
 
 analysis--->
-cost : 14
-nodes expanded : 156
-nodes explored: 156
+cost : 26
+nodes expanded : 1439
+nodes explored: 1459
 ---------------------------------------
 ---------------------------------------
 heuristic : Hamming
@@ -335,11 +400,6 @@ nodes explored: 10
 ---------------------------------------
 ---------------------------------------
 heuristic : Linear Conflict
-conflict between 0 and 12
-conflict between 0 and 12
-conflict between 0 and 14
-conflict between 0 and 8
-conflict between 0 and 12
 1 2 3 4 
 5 6 0 8 
 9 10 7 11 
@@ -362,6 +422,6 @@ conflict between 0 and 12
 
 analysis--->
 cost : 3
-nodes expanded : 12
-nodes explored: 12
+nodes expanded : 10
+nodes explored: 10
 ---------------------------------------

@@ -6,6 +6,8 @@
 #define nl printf("\n")
 #define pp pair<int,int>
 
+#define threshold_sz 3*1e6
+
 using namespace std;
 
 class node
@@ -130,9 +132,14 @@ int linearConflict(node u, node g)
         for(int j = 0; j < u.n - 1; j++)
         {
             tj = u.board[i][j];
+            if(tj == 0)
+                continue;
+
             for(int k = j + 1; k < u.n; k++)
             {
                 tk = u.board[i][k];
+                if(tk == 0)
+                    continue;
 
                 //check if tj and tk are in goal row, then if tj is in right of tk
                 if(temp[tj].first == i && temp[tk].first == i && temp[tj].second > temp[tk].second)
@@ -148,9 +155,14 @@ int linearConflict(node u, node g)
         for(int j = 0; j < u.n - 1; j++)
         {
             tj = u.board[j][i];
+            if(tj == 0)
+                continue;
+
             for(int k = j + 1; k < u.n; k++)
             {
                 tk = u.board[k][i];
+                if(tk == 0)
+                    continue;
 
                 //check if tj and tk are in goal column, then if tj is downwards wrt tk
                 if(temp[tj].second == i && temp[tk].second == i && temp[tj].first > temp[tk].first)
@@ -183,7 +195,7 @@ map<node, bool> closedList;
 map<node, int> cost;
 map <node, node> parent;
 
-int explored;
+int explored, overflown;
 int dx[] = {1, -1, 0, 0};
 int dy[] = {0, 0, 1, -1};
 
@@ -209,6 +221,15 @@ void A_Star(node startNode, node goalNode, int h)
 
     while (!openList.empty())
     {
+        if(openList.size() >= threshold_sz || closedList.size() >= threshold_sz)
+        {
+            overflown = 1;
+            while(openList.size())
+                openList.pop();
+
+            return;
+        }
+
         //node having the lowest "f"
         node u = openList.top().second;
 
@@ -349,11 +370,17 @@ int main()
 
         for(i=0; i<3; i++)
         {
-            clr(); path.clear();
+            clr(); path.clear(); overflown = 0;
             printf("---------------------------------------\n");
             cout<<"heuristic :"<<h[i];
 
             A_Star(startNode, goalNode, i + 1);
+
+            if(overflown)
+            {
+                printf("unable to solve the problem as the size of closed-list and open-list got too big\n");
+                continue;
+            }
 
             tempNode=goalNode;
             while (tempNode.n)
