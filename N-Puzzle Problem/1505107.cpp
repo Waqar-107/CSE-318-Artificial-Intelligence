@@ -309,21 +309,21 @@ bool solvable(node u)
     //if the board size is odd, then each legal move changes the number of\
     inversions by an even number, thus if it has odd inversion then it is not solvable
     if (u.n % 2)
-        {
-            if (cnt % 2)
-                return false;
-            else
-                return true;
-        }
+    {
+        if (cnt % 2)
+            return false;
         else
-        {
-            //row of the blank
-            cnt += u.zx;
-            if (cnt % 2)
-                return true;
-            else
-                return false;
-        }
+            return true;
+    }
+    else
+    {
+        //row of the blank
+        cnt += u.zx;
+        if (cnt % 2)
+            return true;
+        else
+            return false;
+    }
 }
 
 int main()
