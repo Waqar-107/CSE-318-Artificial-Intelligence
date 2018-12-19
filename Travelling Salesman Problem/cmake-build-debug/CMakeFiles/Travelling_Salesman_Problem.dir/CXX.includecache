@@ -1,0 +1,12 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/programming/CSE-318-Artificial-Intelligence/Travelling Salesman Problem/1505107_tsp.cpp
+bits/stdc++.h
+-
+
