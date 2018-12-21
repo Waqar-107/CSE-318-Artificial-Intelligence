@@ -53,7 +53,7 @@ int getNearestNode(int src) {
   }
 
   //set cost, that is a global variable used in nearest insertion
-  cost = d;
+  cost = mn;
 
   return v;
 }
@@ -175,15 +175,15 @@ void nearestInsertion(int src) {
   clr();
 
   int u, v, x;
-  int mn, d, idx;
+  int mn, d, w;
 
   path.pb(src), vis[src] = true;
   v = getNearestNode(src), vis[v] = true, path.pb(v);
   path.pb(src);
 
   while (path.size() <= n) {
-    //seletion step
-    mn = inf;
+    //selection step
+    mn = inf, x = -1;
     for (int i = 1; i <= n; i++) {
       if (vis[i]) {
         v = getNearestNode(i);
@@ -193,7 +193,7 @@ void nearestInsertion(int src) {
     }
 
     //insertion step : find where to insert x
-    mn = inf, idx = -1;
+    mn = inf, w = -1;
     for (int i = 0; i < path.size() - 1; i--) {
       u = path[i];
       v = path[i + 1];
@@ -201,16 +201,19 @@ void nearestInsertion(int src) {
       d = dist(nodes[u], nodes[x]) + dist(nodes[x], nodes[v]) - dist(nodes[u], nodes[v]);
 
       if (d < mn)
-        mn = d, idx = i + 1;
+        mn = d, w = v;
     }
 
-    if (idx != -1) {
-      path.pb(-1);
+    if (w != -1) {
+      path.pb(x);
 
-      for (int i = path.size(); i > idx; i--)
-        swap(path[i], path[i - 1]);
+      for (int i = path.size() - 1; ; i--){
+        swap(path[i],path[i-1]);
 
-      path[idx] = x;
+        if(path[i] == w)
+          break;
+      }
+
       vis[x] = true;
     }
   }
@@ -221,11 +224,19 @@ void nearestInsertion(int src) {
 
 
 //-----------------------------------------------
+/* repeat until no improvement is made
+ * start:
+ * best_distance = cost of current route
+ * for i = 1 to path.end - 1
+ *    for k = i + 1 to path.end
+ *      2-opt swap
+ *      if distance is improved then goto to start
+ */
 void twoOpt(int src) {
   clr();
 
   //make the initial route
-  pfs("initial route determined using cheapest insertion heuristic\n");
+  pfs("initial route determined using nearest insertion heuristic\n");
   nearestInsertion(src);
 
   bool f;
@@ -269,6 +280,10 @@ void twoOpt(int src) {
 //-----------------------------------------------
 
 //-----------------------------------------------
+void threeOpt(int src)
+{
+
+}
 //-----------------------------------------------
 
 int main() {
