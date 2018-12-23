@@ -5,12 +5,13 @@ board = Board()
 p1 = Player(0,2)
 p2 = Player(1,2)
 
-turn = 0
+turn = 1
 while board.gameOver() == False:
     board.printBoard()
-    print("player -",turn+1,"\'s turn")
+    print("player -",turn,"\'s turn")
 
-    if turn == 0:
+    # the selected bin is 0'indexed sent from player
+    if turn == 1:
         bn = p1.getNextMove(board)
     else:
         bn = p2.getNextMove(board)

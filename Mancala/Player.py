@@ -4,6 +4,7 @@ heuristic1 = 3
 heuristic2 = 4
 heuristic3 = 5
 heuristic4 = 6
+bin_quantity = 6
 
 
 class Player(object):
@@ -30,12 +31,11 @@ class Player(object):
     def getHumanMove(self, board):
         while True:
             bn = int(input())
-            bn -= 1
 
-            if board.bin[self.playerNo][bn] > 0:
-                return bn
+            if board.bin[self.playerNo][bn] == 0:
+                print("empty bin :",bn)
             else:
-                print(bn, "is empty")
+                return bn
 
     def getHeuristicOne(self, board):
         return 0
