@@ -129,3 +129,11 @@ class Board(object):
             print("player-2 wins")
 
         self.printBoard()
+
+    def copyBoardDetail(self, board):
+        self.storage[1] = board.storage[1]
+        self.storage[2] = board.storage[2]
+
+        for i in range(bin_quantity + 1):
+            self.bin[1][i] = board.bin[1][i]
+            self.bin[2][i] = board.bin[2][i]
