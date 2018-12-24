@@ -32,8 +32,10 @@ class Player(object):
         while True:
             bn = int(input())
 
-            if board.bin[self.playerNo][bn] == 0:
-                print("empty bin :",bn)
+            if bn <= 0 or bn > bin_quantity:
+                print("input out of range")
+            elif board.bin[self.playerNo][bn] == 0:
+                print("empty bin :", bn)
             else:
                 return bn
 

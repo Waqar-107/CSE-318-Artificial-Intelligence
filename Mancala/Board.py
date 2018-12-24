@@ -54,7 +54,6 @@ class Board(object):
 
         # ------------------------------------------------------
         # fill own bins
-        print("bin", binNo, "tot", tot, "q", q, "r", r)
         for i in range(binNo + 1, bin_quantity + 1):
             if r > 0:
                 self.bin[playerNo][i] += 1
@@ -69,8 +68,6 @@ class Board(object):
                     self.bin[playerNo][i] = 0
                     self.bin[otherPlayer][bin_quantity - i + 1] = 0
 
-        # print(st1,fn1,inc1,r,playerNo)
-        # self.printBoard()
         # fill own storage
         if r > 0:
             self.storage[playerNo] += 1
@@ -83,7 +80,14 @@ class Board(object):
             if r > 0:
                 self.bin[otherPlayer][i] += 1
                 r -= 1
-        # print(st2, fn2, inc2,r, playerNo)
+
+        # if there are still some left, fill own storage from the beginning
+        # we started from binNo+1, so finish before it
+        for i in range(1, binNo + 1):
+            if r > 0:
+                self.bin[playerNo][i] += 1
+                r -= 1
+
         # if turn is not -1 then the current player has been given chance again
         if turn == -1:
             turn = otherPlayer
@@ -91,14 +95,37 @@ class Board(object):
         return turn
 
     def gameOver(self):
+        # print(sum(self.bin[1][1:bin_quantity + 1]), sum(self.bin[2][1:bin_quantity + 1]), "sums")
         if self.storage[1] + self.storage[2] == initialStone * bin_quantity * 2:
-            if self.storage[1] > self.storage[2]:
-                print("player-1 wins")
-            elif self.storage[1] == self.storage[2]:
-                print("tie")
-            else:
-                print("player-2 wins")
+            self.showGameResult()
+            return True
 
+        elif sum(self.bin[1][1:bin_quantity + 1]) == 0:
+            self.storage[2] += sum(self.bin[2][1:bin_quantity + 1])
+
+            for k in range(bin_quantity + 1):
+                self.bin[2][k] = 0
+
+            self.showGameResult()
+            return True
+
+        elif sum(self.bin[2][1:bin_quantity + 1]) == 0:
+            self.storage[1] += sum(self.bin[1][1:bin_quantity + 1])
+
+            for k in range(bin_quantity + 1):
+                self.bin[1][k] = 0
+
+            self.showGameResult()
             return True
 
         return False
+
+    def showGameResult(self):
+        if self.storage[1] > self.storage[2]:
+            print("player-1 wins")
+        elif self.storage[1] == self.storage[2]:
+            print("tie")
+        else:
+            print("player-2 wins")
+
+        self.printBoard()
