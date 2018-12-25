@@ -3,7 +3,7 @@ from Constants import *
 
 
 class Player(object):
-    def __init__(self, playerNo, playerType, heuristicNo, W1, W2, W3, W4):
+    def __init__(self, playerNo, playerType, heuristicNo, W1, W2, W3, W4, depth):
         self.playerNo = playerNo
         self.playerType = playerType
         self.tempBoard = Board()
@@ -14,6 +14,7 @@ class Player(object):
         self.W2 = W2
         self.W3 = W3
         self.W4 = W4
+        self.depth = depth
 
         self.otherPlayer = 1
         if playerNo == 1:
@@ -24,13 +25,58 @@ class Player(object):
             return self.__getHumanMove(board)
 
         elif self.playerNo == alpha_beta_pruning:
-            return self.__MiniMax(board)
+            return self.__MiniMax(board, self.depth, True, -inf, inf)
 
-    def __MiniMax(self, board):
-        return 0
+    # minimax algorithm using alpha-beta pruning
+    def __MiniMax(self, board, depth, isMax, alpha, beta):
+        if depth == 0 or board.gameOver(False):
+            return self.__evaluateNode(board)
 
-    def evaluateNode(self, board):
-        return 0
+        # save a copy of the board
+        myBoard = Board()
+        myBoard.copyBoardDetail(board)
+
+        if isMax:
+            best_value = -inf
+            for i in range(1,bin_quantity+1):
+                if board.bin[self.playerNo][i] > 0:
+                    board.updateBoard(self.playerNo, i)
+
+                    curr_value = self.__MiniMax(board, depth - 1, False, alpha, beta)
+                    best_value = max(best_value, curr_value)
+
+                    alpha = max(best_value, alpha)
+                    if beta <= alpha:
+                        break
+
+                    board.copyBoardDetail(myBoard)  # restore original board
+            return best_value
+
+        else:
+            best_value = inf
+            for i in range(1,bin_quantity+1):
+                if board.bin[self.playerNo][i] > 0:
+                    board.updateBoard(self.playerNo, i)
+
+                    curr_value = self.__MiniMax(board, depth - 1, True, alpha, beta)
+                    best_value = min(best_value, curr_value)
+
+                    beta = min(best_value, beta)
+                    if beta <= alpha:
+                        break
+
+                    board.copyBoardDetail(myBoard)  # restore original board
+            return best_value
+
+    def __evaluateNode(self, board):
+        if self.heuristicNo == heuristic1:
+            return self.__HeuristicOne(board)
+        elif self.heuristicNo == heuristic2:
+            return self.__HeuristicTwo(board)
+        elif self.heuristicNo == heuristic3:
+            return self.__HeuristicThree(board)
+        elif self.heuristicNo == heuristic4:
+            return self.__HeuristicFour(board)
 
     def __getHumanMove(self, board):
         while True:

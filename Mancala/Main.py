@@ -8,13 +8,16 @@ W1 = None
 W2 = None
 W3 = None
 W4 = None
+depth = None
 
 board = Board()
-p1 = Player(1, human, heuristicNo, W1, W2, W3, W4)
-p2 = Player(2, human, heuristicNo, W1, W2, W3, W4)
+p1 = Player(1, human, heuristicNo, W1, W2, W3, W4, depth)
+p2 = Player(2, human, heuristicNo, W1, W2, W3, W4, depth)
 
 turn = 1
-while board.gameOver() == False:
+
+# when True is passed to gameOver it will show result
+while board.gameOver(True) == False:
     board.printBoard()
     print("player -", turn, "\'s turn")
 

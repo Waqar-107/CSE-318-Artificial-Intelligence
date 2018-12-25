@@ -6,3 +6,4 @@ heuristic3 = 5
 heuristic4 = 6
 bin_quantity = 6
 initialStone = 4
+inf = 1000000000

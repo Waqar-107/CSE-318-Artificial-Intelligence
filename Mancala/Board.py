@@ -92,10 +92,11 @@ class Board(object):
 
         return turn
 
-    def gameOver(self):
+    def gameOver(self, showResult):
         # print(sum(self.bin[1][1:bin_quantity + 1]), sum(self.bin[2][1:bin_quantity + 1]), "sums")
         if self.storage[1] + self.storage[2] == initialStone * bin_quantity * 2:
-            self.showGameResult()
+            if showResult:
+                self.showGameResult()
             return True
 
         elif sum(self.bin[1][1:bin_quantity + 1]) == 0:
@@ -104,7 +105,8 @@ class Board(object):
             for k in range(bin_quantity + 1):
                 self.bin[2][k] = 0
 
-            self.showGameResult()
+            if showResult:
+                self.showGameResult()
             return True
 
         elif sum(self.bin[2][1:bin_quantity + 1]) == 0:
@@ -113,7 +115,8 @@ class Board(object):
             for k in range(bin_quantity + 1):
                 self.bin[1][k] = 0
 
-            self.showGameResult()
+            if showResult:
+                self.showGameResult()
             return True
 
         return False
