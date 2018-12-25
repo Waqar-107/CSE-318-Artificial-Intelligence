@@ -36,7 +36,7 @@ same for the beta.
 # how the pruning works
                  Z
                  |
-     -----------------------	  
+       -------------------  
        |         |       |
        A         B       C
      -----     -----   -----
