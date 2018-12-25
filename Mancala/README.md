@@ -34,11 +34,14 @@ It can be explained like this-> suppose a "Min" node returned value to "Max", "M
 same for the beta.
 
 # how the pruning works
-	   	Z
-	/        \  	\
-	A   	 B  	C
-     / / /	/ / /   \ \ \
-    3 5 10	2 a b   2 7 3
+                 Z
+                 |
+     -----------------------	  
+       |         |       |
+       A         B       C
+     -----     -----   -----
+     | | |     | | |   | | |
+     3 5 10    2 a b   2 7 3
 
 Z->(-inf,inf)
 A->(-inf,inf) -> min(3,5,10) = 3 so (alpha,beta) will be now (-inf,3) -> beta is updated as A is Min. 3 is returned
