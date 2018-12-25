@@ -20,12 +20,19 @@ class Player(object):
         if playerNo == 1:
             self.otherPlayer = 2
 
+
     def getNextMove(self, board):
         if self.playerType == human:
             return self.__getHumanMove(board)
 
-        elif self.playerNo == alpha_beta_pruning:
-            return self.__MiniMax(board, self.depth, True, -inf, inf)
+        elif self.playerType == alpha_beta_pruning:
+            bn = self.__MiniMax(board, self.depth, True, -inf, inf)
+            print("AI selected:",bn)
+            return bn
+
+        else:
+            print("invalid player type")
+            return 1
 
     # minimax algorithm using alpha-beta pruning
     def __MiniMax(self, board, depth, isMax, alpha, beta):
@@ -38,18 +45,29 @@ class Player(object):
 
         if isMax:
             best_value = -inf
+            successor = -1
             for i in range(1,bin_quantity+1):
                 if board.bin[self.playerNo][i] > 0:
                     board.updateBoard(self.playerNo, i)
 
                     curr_value = self.__MiniMax(board, depth - 1, False, alpha, beta)
-                    best_value = max(best_value, curr_value)
+
+                    # we do this only in the maximizer because the root is "Max"
+                    # the root only needs to decide the successor
+                    if curr_value > best_value:
+                        best_value=curr_value
+                        successor = i
 
                     alpha = max(best_value, alpha)
                     if beta <= alpha:
                         break
 
                     board.copyBoardDetail(myBoard)  # restore original board
+
+            # if root then return the successor
+            if self.depth == depth:
+                return successor
+
             return best_value
 
         else:

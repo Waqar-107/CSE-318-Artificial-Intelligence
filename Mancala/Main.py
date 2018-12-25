@@ -3,16 +3,16 @@ from Board import Board
 from Constants import *
 
 # required only when minimax algo is used
-heuristicNo = None
+heuristicNo = heuristic1
 W1 = None
 W2 = None
 W3 = None
 W4 = None
-depth = None
+depth = 100
 
 board = Board()
 p1 = Player(1, human, heuristicNo, W1, W2, W3, W4, depth)
-p2 = Player(2, human, heuristicNo, W1, W2, W3, W4, depth)
+p2 = Player(2, alpha_beta_pruning, heuristicNo, W1, W2, W3, W4, depth)
 
 turn = 1
 
