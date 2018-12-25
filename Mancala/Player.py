@@ -1,19 +1,19 @@
 from Board import Board
-
-alpha_beta_pruning = 1
-human = 2
-heuristic1 = 3
-heuristic2 = 4
-heuristic3 = 5
-heuristic4 = 6
-bin_quantity = 6
+from Constants import *
 
 
 class Player(object):
-    def __init__(self, playerNo, playerType):
+    def __init__(self, playerNo, playerType, heuristicNo, W1, W2, W3, W4):
         self.playerNo = playerNo
         self.playerType = playerType
         self.tempBoard = Board()
+
+        # if alpha-beta pruning is used then these are required
+        self.heuristicNo = heuristicNo
+        self.W1 = W1
+        self.W2 = W2
+        self.W3 = W3
+        self.W4 = W4
 
         self.otherPlayer = 1
         if playerNo == 1:
@@ -21,21 +21,18 @@ class Player(object):
 
     def getNextMove(self, board):
         if self.playerType == human:
-            return self.getHumanMove(board)
+            return self.__getHumanMove(board)
 
-        elif self.playerType == heuristic1:
-            return self.getHeuristicOne(board)
+        elif self.playerNo == alpha_beta_pruning:
+            return self.__MiniMax(board)
 
-        elif self.playerType == heuristic2:
-            return self.getHeuristicTwo(board)
+    def __MiniMax(self, board):
+        return 0
 
-        elif self.playerType == heuristic3:
-            return self.getHeuristicThree(board)
+    def evaluateNode(self, board):
+        return 0
 
-        elif self.playerType == heuristic4:
-            return self.getHeuristicFour(board)
-
-    def getHumanMove(self, board):
+    def __getHumanMove(self, board):
         while True:
             bn = int(input())
 
@@ -46,34 +43,23 @@ class Player(object):
             else:
                 return bn
 
-    def getHeuristicOne(self, board):
-        bn = 0
-        mx = -1
-        div = bin_quantity * 2 + 1
+    def __HeuristicOne(self, board):
+        return board.storage[self.playerNo] - board.storage[self.otherPlayer]
 
-        for i in range(1, bin_quantity + 1):
-            tot = board.bin[self.playerNo][i]
-            q = tot / div
-            r = tot % div
+    def __HeuristicTwo(self, board):
+        stones_on_my_side = sum(board.bin[self.playerNo][1:bin_quantity + 1])
+        stones_on_opponents_side = sum(board.bin[self.otherPlayer][1:bin_quantity + 1])
+        stones_in_my_storage = board.storage[self.playerNo]
+        stones_in_opponents_storage = board.storage[self.otherPlayer]
 
-            # if i is selected then apart from q, bin_quantity - i bins will be filled
-            # then the storage would get a stone
-            if bin_quantity - i + 1 <= r:
-                q += 1
+        ret = self.W1 * (stones_in_my_storage - stones_in_opponents_storage) + \
+              self.W2 * (stones_on_my_side - stones_on_opponents_side)
+        return ret
 
-            # (stones_in_my_storage – stones_in_opponents_storage)
-            # so maximization of q is required
-            if q > mx:
-                mx = q
-                bn = i
+    def __HeuristicThree(self, board):
+        additional_move_earned = 0
+        return self.__HeuristicTwo(board) + self.W3 * additional_move_earned
 
-        return bn
-
-    def getHeuristicTwo(self, board):
-        return 0
-
-    def getHeuristicThree(self, board):
-        return 0
-
-    def getHeuristicFour(self, board):
-        return 0
+    def __HeuristicFour(self, board):
+        stones_captured = 0
+        return self.__HeuristicThree(board) + self.W4 * stones_captured

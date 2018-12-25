@@ -49,5 +49,22 @@ A->(-inf,inf) -> min(3,5,10) = 3 so (alpha,beta) will be now (-inf,3) -> beta is
 Z->(3,inf) as max(-inf,3)=3 and Z is Max
 B-> (3,inf)
 now we first get 2 from the first child of B. best_value=2, beta=2. now the other child a,b need not to be checked as whatever the value is, finally we will be returning the a value c that is <=2. The value will be compared with alpha of Z, but we can see that Z the maximizer already have alpha=3 which is greater than 2, so whatever value a,b gives, the value returned and beta at B will be <= 2 thus never needed. So we are not checking subtree of 'a' and 'b' thus pruned
+				
+				 |           |
+ 				 Z   		Z2
+                 |
+       -------------------  
+       |         |       |
+       A         B       C
+     -----     -----   -----
+     | | |     | | |   | | |
+     1 1 1     2 a b   2 7 3
+
+suppose A,B,C are in Max level, Z in Min
+A will return 1 to Z and then (alpha,beta) of Z = (-inf, 1)
+
+B will get (-inf, 1)
+now B will return best_value>=2 that will be compared with (beta of Z) = (beta of B)
+as beta < best_val we can say that we can prune here. 
 
 https://www.hackerearth.com/blog/artificial-intelligence/minimax-algorithm-alpha-beta-pruning/

@@ -1,7 +1,5 @@
 import sys
-
-initialStone = 4
-bin_quantity = 6
+from Constants import *
 
 
 class Board(object):

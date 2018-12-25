@@ -1,17 +1,17 @@
 from Player import Player
 from Board import Board
+from Constants import *
 
-alpha_beta_pruning = 1
-human = 2
-heuristic1 = 3
-heuristic2 = 4
-heuristic3 = 5
-heuristic4 = 6
-bin_quantity = 6
+# required only when minimax algo is used
+heuristicNo = None
+W1 = None
+W2 = None
+W3 = None
+W4 = None
 
 board = Board()
-p1 = Player(1, human)
-p2 = Player(2, heuristic1)
+p1 = Player(1, human, heuristicNo, W1, W2, W3, W4)
+p2 = Player(2, human, heuristicNo, W1, W2, W3, W4)
 
 turn = 1
 while board.gameOver() == False:
