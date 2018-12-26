@@ -11,8 +11,8 @@ W4 = None
 depth = 100
 
 board = Board()
-p1 = Player(1, human, heuristicNo, W1, W2, W3, W4, depth)
-p2 = Player(2, alpha_beta_pruning, heuristicNo, W1, W2, W3, W4, depth)
+p1 = Player(1, alpha_beta_pruning, heuristicNo, W1, W2, W3, W4, depth)
+p2 = Player(2, alpha_beta_pruning, heuristicNo, W1, W2, W3, W4, 10)
 
 turn = 1
 

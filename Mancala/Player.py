@@ -7,6 +7,7 @@ class Player(object):
         self.playerNo = playerNo
         self.playerType = playerType
         self.tempBoard = Board()
+        self.turn = -1
 
         # if alpha-beta pruning is used then these are required
         self.heuristicNo = heuristicNo
@@ -20,14 +21,13 @@ class Player(object):
         if playerNo == 1:
             self.otherPlayer = 2
 
-
     def getNextMove(self, board):
         if self.playerType == human:
             return self.__getHumanMove(board)
 
         elif self.playerType == alpha_beta_pruning:
             bn = self.__MiniMax(board, self.depth, True, -inf, inf)
-            print("AI selected:",bn)
+            print("AI selected:", bn)
             return bn
 
         else:
@@ -46,7 +46,7 @@ class Player(object):
         if isMax:
             best_value = -inf
             successor = -1
-            for i in range(1,bin_quantity+1):
+            for i in range(1, bin_quantity + 1):
                 if board.bin[self.playerNo][i] > 0:
                     board.updateBoard(self.playerNo, i)
 
@@ -55,7 +55,7 @@ class Player(object):
                     # we do this only in the maximizer because the root is "Max"
                     # the root only needs to decide the successor
                     if curr_value > best_value:
-                        best_value=curr_value
+                        best_value = curr_value
                         successor = i
 
                     alpha = max(best_value, alpha)
@@ -72,7 +72,7 @@ class Player(object):
 
         else:
             best_value = inf
-            for i in range(1,bin_quantity+1):
+            for i in range(1, bin_quantity + 1):
                 if board.bin[self.playerNo][i] > 0:
                     board.updateBoard(self.playerNo, i)
 
@@ -125,5 +125,5 @@ class Player(object):
         return self.__HeuristicTwo(board) + self.W3 * additional_move_earned
 
     def __HeuristicFour(self, board):
-        stones_captured = 0
+        stones_captured = board.storage[self.playerNo] - self.tempBoard.storage[self.playerNo]
         return self.__HeuristicThree(board) + self.W4 * stones_captured
