@@ -61,7 +61,7 @@ int getNearestNode(int src) {
 float printPath(bool p) {
   int u, v;
   float d = 0;
-  for (int i = 0; i < path.size() - 1; i++) {
+  for (int i = 0; i < n; i++) {
     u = path[i];
     v = path[i + 1];
 
@@ -120,14 +120,12 @@ void cheapestInsertion(int src) {
   int u, v, x;
   int mn, idx, d;
 
+  //----------------------------
+  //i-r-i
+  path.pb(src), vis[src] = true;
+  v = getNearestNode(src), vis[v] = true, path.pb(v);
   path.pb(src);
-  vis[src] = true;
-
-  v = getNearestNode(src);
-  vis[v] = true;
-  path.pb(v);
-
-  path.pb(src);
+  //----------------------------
 
   while (path.size() <= n) {
     mn = inf;
@@ -177,12 +175,15 @@ void nearestInsertion(int src) {
   int u, v, x;
   int mn, d, w, w0;
 
+  //----------------------------
+  //i-r-i
   path.pb(src), vis[src] = true;
   v = getNearestNode(src), vis[v] = true, path.pb(v);
   path.pb(src);
+  //----------------------------
 
   while (path.size() <= n) {
-    //selection step
+    //selection step - finding overall closest node
     mn = inf, x = -1;
     for (int i = 1; i <= n; i++) {
       if (vis[i]) {
@@ -247,24 +248,22 @@ void twoOpt(int src) {
 
     f = false;
 
-    //the starting node is not eligible to swap
-    for (int i = 1; i < path.size() - 1; i++) {
+    for (int i = 1; i < path.size() - 2; i++) {
       for (int k = i + 1; k < path.size() - 1; k++) {
-
         //two opt-swap
         //step 1: take path[0] to path[i-1]
         //step 2: take path[i] to path[k] in reverse order
         //step 3: take the rest - path[k+1] to the end
 
         //just reversing will do
-        reverse(path.begin() + i, path.begin() + k);
+        reverse(path.begin() + i, path.begin() + k + 1);
         new_cost = printPath(false);
 
         if (new_cost < best_cost) {
           best_cost = new_cost, f = true;
           break;  //as the algo says -> go to start
         } else {
-          reverse(path.begin() + i, path.begin() + k);
+          reverse(path.begin() + i, path.begin() + k + 1);
         }
       }
 
@@ -295,8 +294,8 @@ void threeOpt(int src) {
   while (true) {
     f = false;
 
-    // the last and the first node is the starting node so we leeave them alone and operate on the other edges
-    for (int i = 1; i < path.size() - 1; i++) {
+    // the last and the first node is the starting node so we leave them alone and operate on the other edges
+    for (int i = 0; i < path.size() - 1; i++) {
       for (int j = i + 2; j < path.size() - 1; j++) {
         for (int k = j + 2; k < path.size() - 1; k++) {
           I = i, J = i + 1, K = j, L = j + 1, M = k, N = k + 1;
@@ -305,91 +304,91 @@ void threeOpt(int src) {
 
           //--------------------------------------------------------------
           //1. reverse L-M
-          reverse(path.begin() + L, path.begin() + M);
+          reverse(path.begin() + L, path.begin() + M + 1);
           new_cost = printPath(false);
           if (best_cost > new_cost) {
-            best_cost = new_cost, f = true; dbg;
+            best_cost = new_cost, f = true;
             break;
           }
-          reverse(path.begin() + L, path.begin() + M);
+          reverse(path.begin() + L, path.begin() + M + 1);
           //--------------------------------------------------------------
 
           //--------------------------------------------------------------
           //2. reverse J-K
-          reverse(path.begin() + J, path.begin() + K);
+          reverse(path.begin() + J, path.begin() + K + 1);
           new_cost = printPath(false);
           if (best_cost > new_cost) {
-            best_cost = new_cost, f = true; dbg;
+            best_cost = new_cost, f = true;
             break;
           }
-          //reverse(path.begin() + J, path.begin() + K);
+          //reverse(path.begin() + J, path.begin() + K + 1);
           //same range needs to be reversed in the next variant so comment the above line
           //--------------------------------------------------------------
 
           //--------------------------------------------------------------
           //3. reverse J-K, then L-M
           //we comment out the line below as (J-K) has already been reversed in the previous variant
-          //reverse(path.begin() + J, path.begin() + K);
-          reverse(path.begin() + L, path.begin() + M);
+          //reverse(path.begin() + J, path.begin() + K + 1);
+          reverse(path.begin() + L, path.begin() + M + 1);
           new_cost = printPath(false);
           if (best_cost > new_cost) {
-            best_cost = new_cost, f = true;dbg;
+            best_cost = new_cost, f = true;
             break;
           }
-          reverse(path.begin() + L, path.begin() + M);
-          reverse(path.begin() + J, path.begin() + K);
+          reverse(path.begin() + L, path.begin() + M + 1);
+          reverse(path.begin() + J, path.begin() + K + 1);
           //--------------------------------------------------------------
 
           //--------------------------------------------------------------
           //4. reverse J-M, then L-M, then J-K
-          reverse(path.begin() + J, path.begin() + M);
-          reverse(path.begin() + L, path.begin() + M);
-          reverse(path.begin() + J, path.begin() + K);
+          reverse(path.begin() + J, path.begin() + M + 1);
+          reverse(path.begin() + L, path.begin() + M + 1);
+          reverse(path.begin() + J, path.begin() + K + 1);
           new_cost = printPath(false);
           if (best_cost > new_cost) {
-            best_cost = new_cost, f = true;dbg;
+            best_cost = new_cost, f = true;
             break;
           }
-          reverse(path.begin() + J, path.begin() + K);
-          //reverse(path.begin() + L, path.begin() + M);
-          //reverse(path.begin() + J, path.begin() + M);
+          reverse(path.begin() + J, path.begin() + K + 1);
+          //reverse(path.begin() + L, path.begin() + M + 1);
+          //reverse(path.begin() + J, path.begin() + M + 1);
           //--------------------------------------------------------------
 
           //--------------------------------------------------------------
           //5. reverse J-M, then L-M
-          //reverse(path.begin() + J, path.begin() + M);
-          //reverse(path.begin() + L, path.begin() + M);
+          //reverse(path.begin() + J, path.begin() + M + 1);
+          //reverse(path.begin() + L, path.begin() + M + 1);
           new_cost = printPath(false);
           if (best_cost > new_cost) {
-            best_cost = new_cost, f = true;dbg;
+            best_cost = new_cost, f = true;
             break;
           }
-          reverse(path.begin() + L, path.begin() + M);
-          //reverse(path.begin() + J, path.begin() + M);
+          reverse(path.begin() + L, path.begin() + M + 1);
+          //reverse(path.begin() + J, path.begin() + M + 1);
           //--------------------------------------------------------------
 
           //--------------------------------------------------------------
           //6. reverse J-M, then J-K
-          //reverse(path.begin() + J, path.begin() + M);
-          reverse(path.begin() + J, path.begin() + K);
+          //reverse(path.begin() + J, path.begin() + M + 1);
+          reverse(path.begin() + J, path.begin() + K + 1);
           new_cost = printPath(false);
           if (best_cost > new_cost) {
-            best_cost = new_cost, f = true;dbg;
+            best_cost = new_cost, f = true;
             break;
           }
-          reverse(path.begin() + J, path.begin() + K);
-          //reverse(path.begin() + J, path.begin() + M);
+          reverse(path.begin() + J, path.begin() + K + 1);
+          //reverse(path.begin() + J, path.begin() + M + 1);
           //--------------------------------------------------------------
 
           //--------------------------------------------------------------
           //7. reverse J-M
-          //reverse(path.begin() + J, path.begin() + M);
+          //reverse(path.begin() + J, path.begin() + M + 1);
           new_cost = printPath(false);
           if (best_cost > new_cost) {
-            best_cost = new_cost, f = true;dbg;
+            best_cost = new_cost, f = true;
             break;
           }
-          reverse(path.begin() + J, path.begin() + M);
+          reverse(path.begin() + J, path.begin() + M + 1);
           //--------------------------------------------------------------
         }
 
@@ -421,7 +420,7 @@ int main() {
   //k should be random from (1-n)
   k = 1;
 
-/*  pfs("-------------------------------------------\n");
+  pfs("-------------------------------------------\n");
   pfs("nearest neighbour heuristic\n");
   nearestNeighbour(k);
   pfs("-------------------------------------------\n\n");
@@ -439,9 +438,12 @@ int main() {
   pfs("-------------------------------------------\n");
   pfs("2-opt improvement heuristic\n");
   twoOpt(k);
-  pfs("-------------------------------------------\n\n");*/
+  pfs("-------------------------------------------\n\n");
 
+  pfs("-------------------------------------------\n");
+  pfs("3-opt improvement heuristic\n");
   threeOpt(k);
+  pfs("-------------------------------------------\n\n");
 
   return 0;
 }
