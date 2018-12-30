@@ -74,7 +74,8 @@ class Player(object):
             best_value = inf
             for i in range(1, bin_quantity + 1):
                 if board.bin[self.playerNo][i] > 0:
-                    board.updateBoard(self.playerNo, i)
+                    # min is the opponent aka other-player
+                    board.updateBoard(self.otherPlayer, i)
 
                     curr_value = self.__MiniMax(board, depth - 1, True, alpha, beta)
                     best_value = min(best_value, curr_value)
