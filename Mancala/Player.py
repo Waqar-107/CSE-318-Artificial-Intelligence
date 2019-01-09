@@ -48,7 +48,7 @@ class Player(object):
             successor = -1
             for i in range(1, bin_quantity + 1):
                 if board.bin[self.playerNo][i] > 0:
-                    board.updateBoard(self.playerNo, i)
+                    temp_bn = board.updateBoard(self.playerNo, i)
 
                     curr_value = self.__MiniMax(board, depth - 1, False, alpha, beta)
 
@@ -75,12 +75,12 @@ class Player(object):
             for i in range(1, bin_quantity + 1):
                 if board.bin[self.playerNo][i] > 0:
                     # min is the opponent aka other-player
-                    board.updateBoard(self.otherPlayer, i)
+                    temp_bn = board.updateBoard(self.otherPlayer, i)
 
                     curr_value = self.__MiniMax(board, depth - 1, True, alpha, beta)
                     best_value = min(best_value, curr_value)
-
                     beta = min(best_value, beta)
+
                     if beta <= alpha:
                         break
 

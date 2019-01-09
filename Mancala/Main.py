@@ -8,7 +8,7 @@ W1 = 2
 W2 = 3
 W3 = 1
 W4 = 4
-depth = 100
+depth = 5
 
 board = Board()
 p1 = Player(1, alpha_beta_pruning, heuristic4, W1, W2, W3, W4, 10)
