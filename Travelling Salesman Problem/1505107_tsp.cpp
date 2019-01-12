@@ -14,6 +14,8 @@
 #define pfs(s) printf("%s", s)
 
 #define pb push_back
+#define pp pair<int, int>
+#define ppp pair<pp, int>
 
 using namespace std;
 
@@ -29,7 +31,8 @@ struct node {
 };
 
 int n, cost;
-int vis[SZ];
+bool processed[SZ][SZ];
+int vis[SZ], save[SZ][SZ];
 node nodes[SZ];
 vector<int> path;
 
@@ -58,7 +61,7 @@ int getNearestNode(int src) {
   return v;
 }
 
-float printPath(bool p) {
+float getCost() {
   int u, v;
   float d = 0;
   for (int i = 0; i < n; i++) {
@@ -68,15 +71,15 @@ float printPath(bool p) {
     d += sqrt(dist(nodes[u], nodes[v]) * 1.0);
   }
 
-  if (p) {
-    for (int i = 0; i < n; i++)
-      pf(path[i]), pfs("->");
-
-    pf(path[n]), pfs("\n");
-    printf("cost : %f\n", d);
-  }
-
   return d;
+}
+
+void printPath() {
+  for (int i = 0; i < n; i++)
+    pf(path[i]), pfs("->");
+
+  pf(path[n]), pfs("\n");
+  printf("cost : %f\n", getCost());
 }
 
 
@@ -102,7 +105,7 @@ void nearestNeighbour(int src) {
   }
 
   path.pb(src);
-  printPath(true);
+  printPath();
 }
 //-----------------------------------------------
 
@@ -153,7 +156,7 @@ void cheapestInsertion(int src) {
     }
   }
 
-  printPath(true);
+  printPath();
 }
 
 //-----------------------------------------------
@@ -219,10 +222,50 @@ void nearestInsertion(int src) {
     }
   }
 
-  printPath(true);
+  printPath();
 }
 //-----------------------------------------------
 
+
+//-----------------------------------------------
+/* clarke and wright savings heuristic
+ * 
+ * compute savings S_ij = Csi + Csj - Cij for all i,j != s
+ */
+//-----------------------------------------------
+bool cmp(ppp a, ppp b) {
+  return a.second > b.second;
+}
+
+void savingsHeuristic(int src) {
+  clr();
+  memset(save, 0, sizeof(save));
+  memset(processed, 0, sizeof(processed));
+
+  vector<ppp> vec;
+  for(int i = 1; i <= n; i++)
+  {
+    if(i == src)continue;
+
+    for(int j = i+1; j <= n; j++)
+    {
+      if(j == src)continue;
+
+      int d = dist(nodes[src], nodes[i]) + dist(nodes[src], nodes[j]) - dist(nodes[i], nodes[j]);
+      vec.pb({ {i, j}, d});
+    }
+  }
+
+  sort(vec.begin(), vec.end(), cmp);
+
+  for(ppp e : vec)
+  {
+    if(vis[e.first.first] && vis[e.first.second])continue;
+
+    //link i-j
+  }
+
+}
 
 //-----------------------------------------------
 /* repeat until no improvement is made
@@ -242,7 +285,7 @@ void twoOpt(int src) {
 
   bool f;
   float new_cost;
-  float best_cost = printPath(false);
+  float best_cost = getCost();
 
   while (true) {
 
@@ -257,7 +300,7 @@ void twoOpt(int src) {
 
         //just reversing will do
         reverse(path.begin() + i, path.begin() + k + 1);
-        new_cost = printPath(false);
+        new_cost = getCost();
 
         if (new_cost < best_cost) {
           best_cost = new_cost, f = true;
@@ -273,7 +316,7 @@ void twoOpt(int src) {
     if (!f)break;
   }
 
-  printPath(true);
+  printPath();
 }
 //-----------------------------------------------
 
@@ -287,7 +330,7 @@ void threeOpt(int src) {
 
   bool f;
   float new_cost;
-  float best_cost = printPath(false);
+  float best_cost = getCost();
 
   int I, J, K, L, M, N;
 
@@ -305,7 +348,7 @@ void threeOpt(int src) {
           //--------------------------------------------------------------
           //1. reverse L-M
           reverse(path.begin() + L, path.begin() + M + 1);
-          new_cost = printPath(false);
+          new_cost = getCost();
           if (best_cost > new_cost) {
             best_cost = new_cost, f = true;
             break;
@@ -316,7 +359,7 @@ void threeOpt(int src) {
           //--------------------------------------------------------------
           //2. reverse J-K
           reverse(path.begin() + J, path.begin() + K + 1);
-          new_cost = printPath(false);
+          new_cost = getCost();
           if (best_cost > new_cost) {
             best_cost = new_cost, f = true;
             break;
@@ -330,7 +373,7 @@ void threeOpt(int src) {
           //we comment out the line below as (J-K) has already been reversed in the previous variant
           //reverse(path.begin() + J, path.begin() + K + 1);
           reverse(path.begin() + L, path.begin() + M + 1);
-          new_cost = printPath(false);
+          new_cost = getCost();
           if (best_cost > new_cost) {
             best_cost = new_cost, f = true;
             break;
@@ -344,7 +387,7 @@ void threeOpt(int src) {
           reverse(path.begin() + J, path.begin() + M + 1);
           reverse(path.begin() + L, path.begin() + M + 1);
           reverse(path.begin() + J, path.begin() + K + 1);
-          new_cost = printPath(false);
+          new_cost = getCost();
           if (best_cost > new_cost) {
             best_cost = new_cost, f = true;
             break;
@@ -358,7 +401,7 @@ void threeOpt(int src) {
           //5. reverse J-M, then L-M
           //reverse(path.begin() + J, path.begin() + M + 1);
           //reverse(path.begin() + L, path.begin() + M + 1);
-          new_cost = printPath(false);
+          new_cost = getCost();
           if (best_cost > new_cost) {
             best_cost = new_cost, f = true;
             break;
@@ -371,7 +414,7 @@ void threeOpt(int src) {
           //6. reverse J-M, then J-K
           //reverse(path.begin() + J, path.begin() + M + 1);
           reverse(path.begin() + J, path.begin() + K + 1);
-          new_cost = printPath(false);
+          new_cost = getCost();
           if (best_cost > new_cost) {
             best_cost = new_cost, f = true;
             break;
@@ -383,7 +426,7 @@ void threeOpt(int src) {
           //--------------------------------------------------------------
           //7. reverse J-M
           //reverse(path.begin() + J, path.begin() + M + 1);
-          new_cost = printPath(false);
+          new_cost = getCost();
           if (best_cost > new_cost) {
             best_cost = new_cost, f = true;
             break;
@@ -401,7 +444,7 @@ void threeOpt(int src) {
     if (!f)break;
   }
 
-  printPath(true);
+  printPath();
 }
 //-----------------------------------------------
 

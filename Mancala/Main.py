@@ -11,8 +11,8 @@ W4 = 4
 depth = 5
 
 board = Board()
-p1 = Player(1, alpha_beta_pruning, heuristic4, W1, W2, W3, W4, 10)
-p2 = Player(2, alpha_beta_pruning, heuristic1, W1, W2, W3, W4, 10)
+p1 = Player(1, alpha_beta_pruning, heuristic4, W1, W2, W3, W4, 30)
+p2 = Player(2, alpha_beta_pruning, heuristic1, W1, W2, W3, W4, 30)
 
 turn = 1
 
@@ -28,3 +28,7 @@ while board.gameOver(True) == False:
         bn = p2.getNextMove(board)
 
     turn = board.updateBoard(turn, bn)
+
+'''
+https://stackoverflow.com/questions/16656976/how-to-adapt-my-minimax-search-tree-to-deal-with-no-term-based-game
+'''

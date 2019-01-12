@@ -68,3 +68,5 @@ now B will return best_value>=2 that will be compared with (beta of Z) = (beta o
 as beta < best_val we can say that we can prune here. 
 
 https://www.hackerearth.com/blog/artificial-intelligence/minimax-algorithm-alpha-beta-pruning/
+
+https://stackoverflow.com/questions/16656976/how-to-adapt-my-minimax-search-tree-to-deal-with-no-term-based-game
