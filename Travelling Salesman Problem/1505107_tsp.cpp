@@ -5,7 +5,7 @@
 #define dbg printf("in\n");
 #define nl printf("\n");
 #define SZ 200
-#define inf 1000000000
+#define inf 1000000000.0
 
 #define sf(n) scanf("%d", &n)
 #define sff(n, m) scanf("%d%d",&n,&m)
@@ -15,24 +15,23 @@
 
 #define pb push_back
 #define pp pair<int, int>
-#define ppp pair<pp, int>
 
 using namespace std;
 
 struct node {
-  int x, y;
+  double x, y;
 
   node() {}
 
-  node(int x, int y) {
+  node(double x, double y) {
     this->x = x;
     this->y = y;
   }
 };
 
-int n, cost;
-bool processed[SZ][SZ];
-int vis[SZ], save[SZ][SZ];
+int n; double cost;
+bool vis[SZ];
+double savingsTable[SZ][SZ];
 node nodes[SZ];
 vector<int> path;
 
@@ -41,12 +40,13 @@ void clr() {
   path.clear();
 }
 
-int dist(node u, node v) {
-  return ((u.x - v.x) * (u.x - v.x) + (u.y - v.y) * (u.y - v.y));
+double dist(node u, node v) {
+  double d = sqrt((u.x - v.x) * (u.x - v.x) + (u.y - v.y) * (u.y - v.y));
+  return d;
 }
 
 int getNearestNode(int src) {
-  int mn = inf, v = -1, d;
+  double mn = inf, d; int v = -1;
   for (int i = 1; i <= n; i++) {
     if (!vis[i]) {
       d = dist(nodes[src], nodes[i]);
@@ -61,14 +61,14 @@ int getNearestNode(int src) {
   return v;
 }
 
-float getCost() {
+double getCost() {
   int u, v;
-  float d = 0;
+  double d = 0.0;
   for (int i = 0; i < n; i++) {
     u = path[i];
     v = path[i + 1];
 
-    d += sqrt(dist(nodes[u], nodes[v]) * 1.0);
+    d += (dist(nodes[u], nodes[v]));
   }
 
   return d;
@@ -79,7 +79,7 @@ void printPath() {
     pf(path[i]), pfs("->");
 
   pf(path[n]), pfs("\n");
-  printf("cost : %f\n", getCost());
+  printf("cost : %lf\n", getCost());
 }
 
 
@@ -120,8 +120,8 @@ void nearestNeighbour(int src) {
 void cheapestInsertion(int src) {
   clr();
 
-  int u, v, x;
-  int mn, idx, d;
+  int u, v, x, idx;
+  double mn, d;
 
   //----------------------------
   //i-r-i
@@ -176,7 +176,7 @@ void nearestInsertion(int src) {
   clr();
 
   int u, v, x;
-  int mn, d, w, w0;
+  double mn, d; int w, w0;
 
   //----------------------------
   //i-r-i
@@ -228,21 +228,11 @@ void nearestInsertion(int src) {
 
 
 //-----------------------------------------------
-/* clarke and wright savings heuristic
- * 
- * compute savings S_ij = Csi + Csj - Cij for all i,j != s
- */
-//-----------------------------------------------
-bool cmp(ppp a, ppp b) {
-  return a.second > b.second;
-}
-
 void savingsHeuristic(int src) {
   clr();
-  memset(save, 0, sizeof(save));
-  memset(processed, 0, sizeof(processed));
-
-  vector<ppp> vec;
+ 
+  //max savings
+  pp fr; double mx=0, mx2;
   for(int i = 1; i <= n; i++)
   {
     if(i == src)continue;
@@ -251,20 +241,68 @@ void savingsHeuristic(int src) {
     {
       if(j == src)continue;
 
-      int d = dist(nodes[src], nodes[i]) + dist(nodes[src], nodes[j]) - dist(nodes[i], nodes[j]);
-      vec.pb({ {i, j}, d});
+      double d = dist(nodes[src], nodes[i]) + dist(nodes[src], nodes[j]) - dist(nodes[i], nodes[j]);
+      savingsTable[i][j] = savingsTable[j][i] = d;
+
+      if(d > mx){
+        mx=d;
+        fr={i,j};
+      }
     }
   }
 
-  sort(vec.begin(), vec.end(), cmp);
+  deque<int> q;
+  q.push_back(fr.first); q.push_back(fr.second);
+  vis[fr.first] = 1, vis[fr.second] = 1, vis[src] = 1;
 
-  for(ppp e : vec)
+  int u,v,x,y;
+  while(q.size() < n - 1)
   {
-    if(vis[e.first.first] && vis[e.first.second])continue;
+    x=y=-1;
+    u=q.front();
+    v=q.back();
 
-    //link i-j
+    //find edge for u
+    mx=0;
+    for(int i=1;i<=n;i++){
+      if(!vis[i])
+      {
+        if(savingsTable[u][i] > mx)
+          mx=savingsTable[u][i], x=i;
+      }
+    }
+
+    //find edge for v
+    mx2=0;
+    for(int i=1;i<=n;i++){
+      if(!vis[i])
+      {
+        if(savingsTable[v][i] > mx2)
+          mx2=savingsTable[v][i], y=i;
+      }
+    }
+
+    if(x==y)
+    {
+      if(mx > mx2)
+        vis[x]=1, q.push_front(x);
+      else
+        vis[y]=1, q.push_back(y);
+    }
+
+    else
+    {
+      vis[x]=1, q.push_front(x);
+      vis[y]=1, q.push_back(y);
+    }
   }
 
+  q.push_front(src), q.push_back(src);
+
+  for(int e : q)
+    path.pb(e);
+
+  printPath();
 }
 
 //-----------------------------------------------
@@ -284,8 +322,8 @@ void twoOpt(int src) {
   nearestNeighbour(src);
 
   bool f;
-  float new_cost;
-  float best_cost = getCost();
+  double new_cost;
+  double best_cost = getCost();
 
   while (true) {
 
@@ -329,8 +367,8 @@ void threeOpt(int src) {
   nearestNeighbour(src);
 
   bool f;
-  float new_cost;
-  float best_cost = getCost();
+  double new_cost;
+  double best_cost = getCost();
 
   int I, J, K, L, M, N;
 
@@ -449,44 +487,22 @@ void threeOpt(int src) {
 //-----------------------------------------------
 
 int main() {
-  freopen("in.txt", "r", stdin);
+  freopen("burma14.tsp", "r", stdin);
 
   int i, j, k;
-  int x, y;
+  double x, y;
 
   sf(n);
   for (i = 1; i <= n; i++) {
-    sff(x, y);
-    nodes[i] = {x, y};
+    cin >> k >> x >> y;
+    nodes[k] = {x, y};
   }
 
   //k should be random from (1-n)
   k = 1;
 
-  pfs("-------------------------------------------\n");
-  pfs("nearest neighbour heuristic\n");
-  nearestNeighbour(k);
-  pfs("-------------------------------------------\n\n");
-
-  pfs("-------------------------------------------\n");
-  pfs("nearest insertion heuristic\n");
-  nearestInsertion(k);
-  pfs("-------------------------------------------\n\n");
-
-  pfs("-------------------------------------------\n");
-  pfs("cheapest insertion heuristic\n");
-  cheapestInsertion(k);
-  pfs("-------------------------------------------\n\n");
-
-  pfs("-------------------------------------------\n");
-  pfs("2-opt improvement heuristic\n");
-  twoOpt(k);
-  pfs("-------------------------------------------\n\n");
-
-  pfs("-------------------------------------------\n");
-  pfs("3-opt improvement heuristic\n");
-  threeOpt(k);
-  pfs("-------------------------------------------\n\n");
+  savingsHeuristic(k);
+  //nearestNeighbour(k);
 
   return 0;
 }
