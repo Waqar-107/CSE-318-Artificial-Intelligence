@@ -31,7 +31,8 @@ struct node {
   }
 };
 
-int n; double cost;
+int n;
+double cost;
 bool vis[SZ];
 double savingsTable[SZ][SZ];
 node nodes[SZ];
@@ -53,7 +54,8 @@ double dist(node u, node v) {
 }
 
 int getNearestNode(int src) {
-  double mn = inf, d; int v = -1;
+  double mn = inf, d;
+  int v = -1;
   for (int i = 1; i <= n; i++) {
     if (!vis[i]) {
       d = dist(nodes[src], nodes[i]);
@@ -68,14 +70,14 @@ int getNearestNode(int src) {
   return v;
 }
 
-int getNearestNodeRandomly(int src)
-{
-  vector<ppd> vec;
-  double d; int v = -1;
+int getNearestNodeRandomly(int src) {
+  vector<ppd > vec;
+  double d;
+  int v = -1;
   for (int i = 1; i <= n; i++) {
     if (!vis[i]) {
       d = dist(nodes[src], nodes[i]);
-      vec.pb({d,i});
+      vec.pb({d, i});
     }
   }
 
@@ -83,10 +85,10 @@ int getNearestNodeRandomly(int src)
 
   //W = 5
   int r = W;
-  if(vec.size()<W)
+  if (vec.size() < W)
     r = vec.size();
 
-  int r2=rand()%r;
+  int r2 = rand() % r;
   return vec[r2].second;
 }
 
@@ -119,7 +121,7 @@ void printPath() {
  * repeat this till all are visited
  * then finally connect the last node to the path
  */
-void nearestNeighbour(int src,int wh) {
+void nearestNeighbour(int src, int wh) {
   clr();
 
   int v = src;
@@ -127,10 +129,10 @@ void nearestNeighbour(int src,int wh) {
   path.pb(src);
 
   while (path.size() < n) {
-    if(wh==1)
+    if (wh == 1)
       v = getNearestNode(v);
     else
-      v=getNearestNodeRandomly(v);
+      v = getNearestNodeRandomly(v);
 
     vis[v] = true;
     path.pb(v);
@@ -208,7 +210,8 @@ void nearestInsertion(int src) {
   clr();
 
   int u, v, x;
-  double mn, d; int w, w0;
+  double mn, d;
+  int w, w0;
 
   //----------------------------
   //i-r-i
@@ -262,157 +265,142 @@ void nearestInsertion(int src) {
 //-----------------------------------------------
 void savingsHeuristic(int src) {
   clr();
-  memset(savingsTable,0,sizeof(savingsTable));
- 
-  //max savings
-  pp fr; double mx=0, mx2;
-  for(int i = 1; i <= n; i++)
-  {
-    if(i == src)continue;
+  memset(savingsTable, 0, sizeof(savingsTable));
 
-    for(int j = i+1; j <= n; j++)
-    {
-      if(j == src)continue;
+  //max savings
+  pp fr;
+  double mx = 0, mx2;
+  for (int i = 1; i <= n; i++) {
+    if (i == src)continue;
+
+    for (int j = i + 1; j <= n; j++) {
+      if (j == src)continue;
 
       double d = dist(nodes[src], nodes[i]) + dist(nodes[src], nodes[j]) - dist(nodes[i], nodes[j]);
       savingsTable[i][j] = savingsTable[j][i] = d;
 
-      if(d > mx){
-        mx=d;
-        fr={i,j};
+      if (d > mx) {
+        mx = d;
+        fr = {i, j};
       }
     }
   }
 
   deque<int> q;
-  q.push_back(fr.first); q.push_back(fr.second);
+  q.push_back(fr.first);
+  q.push_back(fr.second);
   vis[fr.first] = 1, vis[fr.second] = 1, vis[src] = 1;
 
-  int u,v,x,y;
-  while(q.size() < n - 1)
-  {
-    x=y=-1;
-    u=q.front();
-    v=q.back();
+  int u, v, x, y;
+  while (q.size() < n - 1) {
+    x = y = -1;
+    u = q.front();
+    v = q.back();
 
     //find edge for u
-    mx=0;
-    for(int i=1;i<=n;i++){
-      if(!vis[i])
-      {
-        if(savingsTable[u][i] > mx)
-          mx=savingsTable[u][i], x=i;
+    mx = 0;
+    for (int i = 1; i <= n; i++) {
+      if (!vis[i]) {
+        if (savingsTable[u][i] > mx)
+          mx = savingsTable[u][i], x = i;
       }
     }
 
     //find edge for v
-    mx2=0;
-    for(int i=1;i<=n;i++){
-      if(!vis[i])
-      {
-        if(savingsTable[v][i] > mx2)
-          mx2=savingsTable[v][i], y=i;
+    mx2 = 0;
+    for (int i = 1; i <= n; i++) {
+      if (!vis[i]) {
+        if (savingsTable[v][i] > mx2)
+          mx2 = savingsTable[v][i], y = i;
       }
     }
 
-    if(x==y)
-    {
-      if(mx > mx2)
-        vis[x]=1, q.push_front(x);
+    if (x == y) {
+      if (mx > mx2)
+        vis[x] = 1, q.push_front(x);
       else
-        vis[y]=1, q.push_back(y);
-    }
-
-    else
-    {
-      vis[x]=1, q.push_front(x);
-      vis[y]=1, q.push_back(y);
+        vis[y] = 1, q.push_back(y);
+    } else {
+      vis[x] = 1, q.push_front(x);
+      vis[y] = 1, q.push_back(y);
     }
   }
 
   q.push_front(src), q.push_back(src);
 
-  for(int e : q)
+  for (int e : q)
     path.pb(e);
 
   printPath();
 }
 
-
 //-----------------------------------------------
-void randomizedSavingsHeuristics(int src){
+void randomizedSavingsHeuristics(int src) {
   clr();
-  memset(savingsTable,0,sizeof(savingsTable));
-  
-  pp fr; double mx=0;
-  for(int i = 1; i <= n; i++)
-  {
-    if(i == src)continue;
+  memset(savingsTable, 0, sizeof(savingsTable));
 
-    for(int j = i+1; j <= n; j++)
-    {
-      if(j == src)continue;
+  pp fr;
+  double mx = 0;
+  for (int i = 1; i <= n; i++) {
+    if (i == src)continue;
+
+    for (int j = i + 1; j <= n; j++) {
+      if (j == src)continue;
 
       double d = dist(nodes[src], nodes[i]) + dist(nodes[src], nodes[j]) - dist(nodes[i], nodes[j]);
       savingsTable[i][j] = savingsTable[j][i] = d;
-      
-      if(d >= mx){
-        mx=d;
-        fr={i,j};
+
+      if (d >= mx) {
+        mx = d;
+        fr = {i, j};
       }
     }
   }
 
   deque<int> q;
-  q.push_back(fr.first); q.push_back(fr.second);
+  q.push_back(fr.first);
+  q.push_back(fr.second);
   vis[fr.first] = 1, vis[fr.second] = 1, vis[src] = 1;
 
-  int u,v,x,y;
-  vector<ppd> vec, wec;
+  int u, v, x, y;
+  vector<ppd > vec, wec;
 
-  while(q.size() < n - 1)
-  {
-    x=y=-1;
-    u=q.front();
-    v=q.back();
+  while (q.size() < n - 1) {
+    x = y = -1;
+    u = q.front();
+    v = q.back();
 
     //find edge for u
-    for(int i=1;i<=n;i++){
-      if(!vis[i])
+    for (int i = 1; i <= n; i++) {
+      if (!vis[i])
         vec.pb({savingsTable[u][i], i});
     }
 
     //find edge for v
-    for(int i=1;i<=n;i++){
-      if(!vis[i])
+    for (int i = 1; i <= n; i++) {
+      if (!vis[i])
         wec.pb({savingsTable[v][i], i});
     }
 
-    sort(vec.begin(),vec.end(),greater<ppd>());
-    sort(wec.begin(),wec.end(),greater<ppd>());
+    sort(vec.begin(), vec.end(), greater<ppd >());
+    sort(wec.begin(), wec.end(), greater<ppd >());
 
-    if(vec.size()>=W){
-      x=rand()%W;
-      y=rand()%W;
+    if (vec.size() >= W) {
+      x = rand() % W;
+      y = rand() % W;
+    } else {
+      x = rand() % vec.size();
+      y = rand() % wec.size();
     }
 
-    else{
-      x=rand()%vec.size();
-      y=rand()%wec.size();
-    }
-
-    if(vec[x].second==wec[y].second)
-    {
-      if(vec[x].first==wec[y].first)
-        vis[vec[x].second]=1, q.push_front(vec[x].second);
+    if (vec[x].second == wec[y].second) {
+      if (vec[x].first == wec[y].first)
+        vis[vec[x].second] = 1, q.push_front(vec[x].second);
       else
-        vis[wec[y].second]=1, q.push_back(wec[y].second);
-    }
-
-    else
-    {
-      vis[vec[x].second]=1, q.push_front(vec[x].second);
-      vis[wec[y].second]=1, q.push_back(wec[y].second);
+        vis[wec[y].second] = 1, q.push_back(wec[y].second);
+    } else {
+      vis[vec[x].second] = 1, q.push_front(vec[x].second);
+      vis[wec[y].second] = 1, q.push_back(wec[y].second);
     }
 
     vec.clear(), wec.clear();
@@ -420,7 +408,7 @@ void randomizedSavingsHeuristics(int src){
 
   q.push_front(src), q.push_back(src);
 
-  for(int e : q)
+  for (int e : q)
     path.pb(e);
 
   printPath();
@@ -609,7 +597,7 @@ void threeOpt(int src) {
 //-----------------------------------------------
 
 int main() {
-  freopen("burma14.tsp", "r", stdin);
+  freopen("st70.tsp", "r", stdin);
 
   srand(time(NULL));
 
@@ -630,59 +618,57 @@ int main() {
   //================================================================================
 
   //nearest neighbor
-  best=inf, worst=0;
-  for(i=0;i<5;i++)
-  {
-    k=rand()%n;
-    if(k==0)
-      k=n;
+  best = inf, worst = 0;
+  for (i = 0; i < 5; i++) {
+    k = rand() % n;
+    if (k == 0)
+      k = n;
 
-    nearestStart[i]=k;
+    nearestStart[i] = k;
     nearestNeighbour(k, 1);
 
-    for(int e : path)
+    for (int e : path)
       nearestNeighbourPath[i].pb(e);
-    
-    nearestNeighbourCosts[i]=getCost();
 
-    best=min(best, nearestNeighbourCosts[i]);
-    worst=max(worst, nearestNeighbourCosts[i]);
+    nearestNeighbourCosts[i] = getCost();
+
+    best = min(best, nearestNeighbourCosts[i]);
+    worst = max(worst, nearestNeighbourCosts[i]);
   }
 
   //for which node you get the best - required in task-2
-  for(i=0;i<5;i++){
-    if(nearestNeighbourCosts[i]==best)bst1=nearestStart[i];
+  for (i = 0; i < 5; i++) {
+    if (nearestNeighbourCosts[i] == best)bst1 = nearestStart[i];
   }
 
-  cout<<"Nearest Neighbour Heuristic-> best case:"<<best<<" , worst case:"<< worst<<endl<<endl;
+  cout << "Nearest Neighbour Heuristic-> best case:" << best << " , worst case:" << worst << endl << endl;
 
   //savings heuristic
-  best=inf, worst=0;
-  for(i=0;i<5;i++)
-  {
-    k=rand()%n;
-    if(k==0)
-      k=n;
+  best = inf, worst = 0;
+  for (i = 0; i < 5; i++) {
+    k = rand() % n;
+    if (k == 0)
+      k = n;
 
-    savingsStart[i]=k;
+    savingsStart[i] = k;
     savingsHeuristic(k);
 
-    for(int e : path)
+    for (int e : path)
       savingsPath[i].pb(e);
-    
-    savingsCost[i]=getCost();
 
-    best=min(best, savingsCost[i]);
-    worst=max(worst, savingsCost[i]);
+    savingsCost[i] = getCost();
+
+    best = min(best, savingsCost[i]);
+    worst = max(worst, savingsCost[i]);
   }
 
-   //for which node you get the best - required in task-2
-  for(i=0;i<5;i++){
-    if(savingsCost[i]==best)bst2=savingsStart[i];
+  //for which node you get the best - required in task-2
+  for (i = 0; i < 5; i++) {
+    if (savingsCost[i] == best)bst2 = savingsStart[i];
   }
 
-  cout<<"Savings Neighbour Heuristic-> best case:"<<best<<" , worst case:"<< worst<<endl<<endl;
-  
+  cout << "Savings Neighbour Heuristic-> best case:" << best << " , worst case:" << worst << endl << endl;
+
 
 
   //================================================================================
@@ -691,67 +677,63 @@ int main() {
 
   //randomized nearest
   //nearest neighbor
-  best=inf, worst=0;
-  for(i=0;i<10;i++)
-  {
+  best = inf, worst = 0;
+  for (i = 0; i < 10; i++) {
     nearestNeighbour(bst1, 2);
-    
-    best=min(best, getCost());
-    worst=max(worst, getCost());
+
+    best = min(best, getCost());
+    worst = max(worst, getCost());
   }
 
-  cout<<"started from: "<<bst1<<endl;
-  cout<<"Randomized Nearest Neighbour Heuristic-> best case:"<<best<<" , worst case:"<< worst<<endl<<endl;
-  
+  cout << "started from: " << bst1 << endl;
+  cout << "Randomized Nearest Neighbour Heuristic-> best case:" << best << " , worst case:" << worst << endl << endl;
+
 
   //randomized savings 
-  best=inf, worst=0;
-  for(i=0;i<10;i++)
-  {
+  best = inf, worst = 0;
+  for (i = 0; i < 10; i++) {
     randomizedSavingsHeuristics(bst2);
-    
-    best=min(best, getCost());
-    worst=max(worst, getCost());
+
+    best = min(best, getCost());
+    worst = max(worst, getCost());
   }
 
-  cout<<"started from: "<<bst2<<endl;
-  cout<<"Randomized Savings Heuristic-> best case:"<<best<<" , worst case:"<< worst<<endl<<endl;
-  
+  cout << "started from: " << bst2 << endl;
+  cout << "Randomized Savings Heuristic-> best case:" << best << " , worst case:" << worst << endl << endl;
+
 
   //================================================================================
   //task3
   //================================================================================
   //2-opt on nearest neighbour
-  best=inf, worst=0; 
-  for(i=0;i<5;i++)
-  {
+  best = inf, worst = 0;
+  for (i = 0; i < 5; i++) {
     path.clear();
-    for(int e : nearestNeighbourPath[i])
+    for (int e : nearestNeighbourPath[i])
       path.pb(e);
 
     twoOpt(nearestStart[i]);
 
-    best=min(best, getCost());
-    worst=max(worst, getCost());
+    best = min(best, getCost());
+    worst = max(worst, getCost());
   }
 
-  cout<<"Two Opt on  Nearest Neighbour Heuristic-> best case:"<<best<<" , worst case:"<< worst<<endl<<endl;
+  cout << "Two Opt on  Nearest Neighbour Heuristic-> best case:" << best << " , worst case:" << worst << endl << endl;
 
   //2-otp on savings
-  best=inf, worst=0; 
-  for(i=0;i<5;i++)
-  {
+  best = inf, worst = 0;
+  for (i = 0; i < 5; i++) {
     path.clear();
-    for(int e : savingsPath[i])
+    for (int e : savingsPath[i])
       path.pb(e);
 
     twoOpt(savingsStart[i]);
 
-    best=min(best, getCost());
-    worst=max(worst, getCost());
+    best = min(best, getCost());
+    worst = max(worst, getCost());
   }
 
-  cout<<"Two Opt on  Nearest Neighbour Heuristic-> best case:"<<best<<" , worst case:"<< worst<<endl<<endl;
+  cout << "Two Opt on  Nearest Neighbour Heuristic-> best case:" << best << " , worst case:" << worst << endl << endl;
 
   return 0;
 }
