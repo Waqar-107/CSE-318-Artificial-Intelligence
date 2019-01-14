@@ -424,20 +424,24 @@ void randomizedSavingsHeuristics(int src) {
  *      2-opt swap
  *      if distance is improved then goto to start
  */
-void twoOpt(int src) {
+void twoOpt(int src, bool fast) {
   //clr();
 
   //make the initial route
   //pfs("initial route determined using nearest neighbour heuristic\n");
   //nearestNeighbour(src, 1);
 
-  bool f;
+  bool f, chg = false;
   double new_cost;
   double best_cost = getCost();
 
   while (true) {
 
     f = false;
+    if (chg && fast) {
+      printPath();
+      return;
+    }
 
     for (int i = 1; i < path.size() - 2; i++) {
       for (int k = i + 1; k < path.size() - 1; k++) {
@@ -452,6 +456,7 @@ void twoOpt(int src) {
 
         if (new_cost < best_cost) {
           best_cost = new_cost, f = true;
+          chg = true;
           break;  //as the algo says -> go to start
         } else {
           reverse(path.begin() + i, path.begin() + k + 1);
@@ -597,7 +602,7 @@ void threeOpt(int src) {
 //-----------------------------------------------
 
 int main() {
-  freopen("st70.tsp", "r", stdin);
+  freopen("burma14.tsp", "r", stdin);
 
   srand(time(NULL));
 
@@ -618,6 +623,7 @@ int main() {
   //================================================================================
 
   //nearest neighbor
+  pfs("----------------------------------------------------------------------\n");
   best = inf, worst = 0;
   for (i = 0; i < 5; i++) {
     k = rand() % n;
@@ -642,8 +648,10 @@ int main() {
   }
 
   cout << "Nearest Neighbour Heuristic-> best case:" << best << " , worst case:" << worst << endl << endl;
+  pfs("----------------------------------------------------------------------\n\n");
 
   //savings heuristic
+  pfs("----------------------------------------------------------------------\n");
   best = inf, worst = 0;
   for (i = 0; i < 5; i++) {
     k = rand() % n;
@@ -668,7 +676,7 @@ int main() {
   }
 
   cout << "Savings Neighbour Heuristic-> best case:" << best << " , worst case:" << worst << endl << endl;
-
+  pfs("----------------------------------------------------------------------\n\n");
 
 
   //================================================================================
@@ -677,6 +685,7 @@ int main() {
 
   //randomized nearest
   //nearest neighbor
+  pfs("----------------------------------------------------------------------\n");
   best = inf, worst = 0;
   for (i = 0; i < 10; i++) {
     nearestNeighbour(bst1, 2);
@@ -687,9 +696,10 @@ int main() {
 
   cout << "started from: " << bst1 << endl;
   cout << "Randomized Nearest Neighbour Heuristic-> best case:" << best << " , worst case:" << worst << endl << endl;
+  pfs("----------------------------------------------------------------------\n\n");
 
-
-  //randomized savings 
+  //randomized savings
+  pfs("----------------------------------------------------------------------\n");
   best = inf, worst = 0;
   for (i = 0; i < 10; i++) {
     randomizedSavingsHeuristics(bst2);
@@ -700,40 +710,93 @@ int main() {
 
   cout << "started from: " << bst2 << endl;
   cout << "Randomized Savings Heuristic-> best case:" << best << " , worst case:" << worst << endl << endl;
-
+  pfs("----------------------------------------------------------------------\n\n");
 
   //================================================================================
   //task3
   //================================================================================
-  //2-opt on nearest neighbour
+
+  //--------------------------------------------------------------------------------
+  //fast 2-opt on nearest neighbour
+  ppd temp[W];
+  for (i = 0; i < W; i++)
+    temp[i] = {nearestNeighbourCosts[i], i};
+  sort(temp, temp + W);
+
+  pfs("----------------------------------------------------------------------\n");
   best = inf, worst = 0;
-  for (i = 0; i < 5; i++) {
+  for (i = 0; i < 3; i++) {
     path.clear();
-    for (int e : nearestNeighbourPath[i])
+    for (int e : nearestNeighbourPath[temp[i].second])
       path.pb(e);
 
-    twoOpt(nearestStart[i]);
+    twoOpt(nearestStart[temp[i].second], true);
 
     best = min(best, getCost());
     worst = max(worst, getCost());
   }
 
-  cout << "Two Opt on  Nearest Neighbour Heuristic-> best case:" << best << " , worst case:" << worst << endl << endl;
+  cout << "First Two Opt on  Nearest Neighbour Heuristic-> best case:" << best << " , worst case:" << worst << endl
+       << endl;
+  pfs("----------------------------------------------------------------------\n\n");
 
-  //2-otp on savings
+  //Best 2-opt
+  pfs("----------------------------------------------------------------------\n");
   best = inf, worst = 0;
-  for (i = 0; i < 5; i++) {
+  for (i = 0; i < 3; i++) {
+    path.clear();
+    for (int e : nearestNeighbourPath[temp[i].second])
+      path.pb(e);
+
+    twoOpt(nearestStart[temp[i].second], false);
+
+    best = min(best, getCost());
+    worst = max(worst, getCost());
+  }
+
+  cout << "Best Two Opt on  Nearest Neighbour Heuristic-> best case:" << best << " , worst case:" << worst << endl
+       << endl;
+  pfs("----------------------------------------------------------------------\n\n");
+  //--------------------------------------------------------------------------------
+
+  //--------------------------------------------------------------------------------
+  //2-opt on savings
+  pfs("----------------------------------------------------------------------\n");
+  for (i = 0; i < W; i++)
+    temp[i] = {savingsCost[i], i};
+  sort(temp, temp + W);
+
+  best = inf, worst = 0;
+  for (i = 0; i < 3; i++) {
     path.clear();
     for (int e : savingsPath[i])
       path.pb(e);
 
-    twoOpt(savingsStart[i]);
+    twoOpt(savingsStart[temp[i].second], true);
 
     best = min(best, getCost());
     worst = max(worst, getCost());
   }
 
-  cout << "Two Opt on  Nearest Neighbour Heuristic-> best case:" << best << " , worst case:" << worst << endl << endl;
+  cout << "First Two Opt on  Savings Heuristic-> best case:" << best << " , worst case:" << worst << endl << endl;
+  pfs("----------------------------------------------------------------------\n\n");
+
+  pfs("----------------------------------------------------------------------\n");
+  best = inf, worst = 0;
+  for (i = 0; i < 3; i++) {
+    path.clear();
+    for (int e : savingsPath[i])
+      path.pb(e);
+
+    twoOpt(savingsStart[temp[i].second], false);
+
+    best = min(best, getCost());
+    worst = max(worst, getCost());
+  }
+
+  cout << "Best Two Opt on  Savings Heuristic-> best case:" << best << " , worst case:" << worst << endl << endl;
+  pfs("----------------------------------------------------------------------\n\n");
+  //--------------------------------------------------------------------------------
 
   return 0;
 }
