@@ -51,13 +51,10 @@ class Player(object):
                     temp_bn = board.updateBoard(self.playerNo, i)
 
                     # if additional turn achieved
-                    '''
                     if temp_bn == self.playerNo:
                         curr_value = self.__MiniMax(board, depth - 1, True, alpha, beta)
                     else:
                         curr_value = self.__MiniMax(board, depth - 1, False, alpha, beta)
-                    '''
-                    curr_value = self.__MiniMax(board, depth - 1, False, alpha, beta)
 
                     # we do this only in the maximizer because the root is "Max"
                     # the root only needs to decide the successor
@@ -85,14 +82,10 @@ class Player(object):
                     temp_bn = board.updateBoard(self.otherPlayer, i)
 
                     # if other player gets an additional turn
-                    '''
                     if temp_bn == self.otherPlayer:
                         curr_value = self.__MiniMax(board, depth - 1, False, alpha, beta)
                     else:
                         curr_value = self.__MiniMax(board, depth - 1, True, alpha, beta)
-                    '''
-
-                    curr_value = self.__MiniMax(board, depth - 1, True, alpha, beta)
 
                     best_value = min(best_value, curr_value)
                     beta = min(best_value, beta)

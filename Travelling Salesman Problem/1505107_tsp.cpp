@@ -6,6 +6,7 @@
 #define nl printf("\n");
 #define SZ 200
 #define W 5
+#define W2 10
 #define inf 1000000000.0
 
 #define sf(n) scanf("%d", &n)
@@ -38,10 +39,10 @@ double savingsTable[SZ][SZ];
 node nodes[SZ];
 vector<int> path;
 
-int nearestStart[W], savingsStart[W];
-double nearestNeighbourCosts[W], savingsCost[W];
-vector<int> nearestNeighbourPath[W];
-vector<int> savingsPath[W];
+int nearestStart[W2], savingsStart[W2];
+double nearestNeighbourCosts[W2], savingsCosts[W2];
+vector<int> nearestNeighbourPath[W2];
+vector<int> savingsPath[W2];
 
 void clr() {
   memset(vis, 0, sizeof(vis));
@@ -424,24 +425,20 @@ void randomizedSavingsHeuristics(int src) {
  *      2-opt swap
  *      if distance is improved then goto to start
  */
-void twoOpt(int src, bool fast) {
+void twoOpt(int src, bool first) {
   //clr();
 
   //make the initial route
   //pfs("initial route determined using nearest neighbour heuristic\n");
   //nearestNeighbour(src, 1);
 
-  bool f, chg = false;
+  bool f;
   double new_cost;
   double best_cost = getCost();
 
   while (true) {
 
     f = false;
-    if (chg && fast) {
-      printPath();
-      return;
-    }
 
     for (int i = 1; i < path.size() - 2; i++) {
       for (int k = i + 1; k < path.size() - 1; k++) {
@@ -456,22 +453,27 @@ void twoOpt(int src, bool fast) {
 
         if (new_cost < best_cost) {
           best_cost = new_cost, f = true;
-          chg = true;
-          break;  //as the algo says -> go to start
+
+          //if first then break and start over
+          //else continue
+          if (first)break;
         } else {
           reverse(path.begin() + i, path.begin() + k + 1);
         }
       }
 
-      if (f)break;
+      //changed, if first then break
+      if (first && f)break;
     }
 
+    //no change, done!!
     if (!f)break;
   }
 
   printPath();
 }
 //-----------------------------------------------
+
 
 //-----------------------------------------------
 void threeOpt(int src) {
@@ -601,6 +603,7 @@ void threeOpt(int src) {
 }
 //-----------------------------------------------
 
+
 int main() {
   freopen("burma14.tsp", "r", stdin);
 
@@ -608,7 +611,7 @@ int main() {
 
   int i, j, k;
   double x, y;
-  double best, worst;
+  double best, worst, current_cost;
   int bst1, bst2;
 
   sf(n);
@@ -630,21 +633,14 @@ int main() {
     if (k == 0)
       k = n;
 
-    nearestStart[i] = k;
     nearestNeighbour(k, 1);
 
-    for (int e : path)
-      nearestNeighbourPath[i].pb(e);
+    current_cost = getCost();
 
-    nearestNeighbourCosts[i] = getCost();
+    if (current_cost < best)
+      bst1 = k, best = current_cost;
 
-    best = min(best, nearestNeighbourCosts[i]);
-    worst = max(worst, nearestNeighbourCosts[i]);
-  }
-
-  //for which node you get the best - required in task-2
-  for (i = 0; i < 5; i++) {
-    if (nearestNeighbourCosts[i] == best)bst1 = nearestStart[i];
+    worst = max(worst, current_cost);
   }
 
   cout << "Nearest Neighbour Heuristic-> best case:" << best << " , worst case:" << worst << endl << endl;
@@ -658,24 +654,17 @@ int main() {
     if (k == 0)
       k = n;
 
-    savingsStart[i] = k;
     savingsHeuristic(k);
 
-    for (int e : path)
-      savingsPath[i].pb(e);
+    current_cost = getCost();
 
-    savingsCost[i] = getCost();
+    if (current_cost < best)
+      bst2 = k, best = current_cost;
 
-    best = min(best, savingsCost[i]);
-    worst = max(worst, savingsCost[i]);
+    worst = max(worst, current_cost);
   }
 
-  //for which node you get the best - required in task-2
-  for (i = 0; i < 5; i++) {
-    if (savingsCost[i] == best)bst2 = savingsStart[i];
-  }
-
-  cout << "Savings Neighbour Heuristic-> best case:" << best << " , worst case:" << worst << endl << endl;
+  cout << "Savings Heuristic-> best case:" << best << " , worst case:" << worst << endl << endl;
   pfs("----------------------------------------------------------------------\n\n");
 
 
@@ -683,15 +672,19 @@ int main() {
   //task-2
   //================================================================================
 
-  //randomized nearest
-  //nearest neighbor
+  //randomized nearest neighbor
   pfs("----------------------------------------------------------------------\n");
   best = inf, worst = 0;
-  for (i = 0; i < 10; i++) {
+  for (i = 0; i < W2; i++) {
     nearestNeighbour(bst1, 2);
 
-    best = min(best, getCost());
-    worst = max(worst, getCost());
+    //save the cost and the path
+    current_cost = getCost();
+    nearestNeighbourCosts[i] = current_cost;
+    for (int e : path)nearestNeighbourPath[i].pb(e);
+
+    best = min(best, current_cost);
+    worst = max(worst, current_cost);
   }
 
   cout << "started from: " << bst1 << endl;
@@ -701,8 +694,11 @@ int main() {
   //randomized savings
   pfs("----------------------------------------------------------------------\n");
   best = inf, worst = 0;
-  for (i = 0; i < 10; i++) {
+  for (i = 0; i < W2; i++) {
     randomizedSavingsHeuristics(bst2);
+
+    savingsCosts[i] = getCost();
+    for (int e : path)savingsPath[i].pb(e);
 
     best = min(best, getCost());
     worst = max(worst, getCost());
@@ -718,10 +714,10 @@ int main() {
 
   //--------------------------------------------------------------------------------
   //fast 2-opt on nearest neighbour
-  ppd temp[W];
-  for (i = 0; i < W; i++)
+  ppd temp[W2];
+  for (i = 0; i < W2; i++)
     temp[i] = {nearestNeighbourCosts[i], i};
-  sort(temp, temp + W);
+  sort(temp, temp + W2);
 
   pfs("----------------------------------------------------------------------\n");
   best = inf, worst = 0;
@@ -762,9 +758,9 @@ int main() {
   //--------------------------------------------------------------------------------
   //2-opt on savings
   pfs("----------------------------------------------------------------------\n");
-  for (i = 0; i < W; i++)
-    temp[i] = {savingsCost[i], i};
-  sort(temp, temp + W);
+  for (i = 0; i < W2; i++)
+    temp[i] = {savingsCosts[i], i};
+  sort(temp, temp + W2);
 
   best = inf, worst = 0;
   for (i = 0; i < 3; i++) {
