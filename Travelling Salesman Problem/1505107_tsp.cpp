@@ -744,7 +744,7 @@ int main() {
     twoOpt(nearestStart[temp[i].second], true);
     current_cost = getCost();
     avg_cost += current_cost;
-   
+
     best = min(best, current_cost);
     worst = max(worst, current_cost);
   }
