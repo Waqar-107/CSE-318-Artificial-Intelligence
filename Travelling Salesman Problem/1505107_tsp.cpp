@@ -2,17 +2,14 @@
 
 #include<bits/stdc++.h>
 
-#define dbg printf("in\n");
-#define nl printf("\n");
+//#define dbg printf("in\n");
+//#define nl printf("\n");
 #define SZ 200
 #define W 5
 #define W2 10
 #define inf 1000000000.0
 
 #define sf(n) scanf("%d", &n)
-#define sff(n, m) scanf("%d%d",&n,&m)
-
-#define pf(n) printf("%d", n)
 #define pfs(s) printf("%s", s)
 
 #define pb push_back
@@ -107,10 +104,10 @@ double getCost() {
 }
 
 void printPath() {
-  for (int i = 0; i < n; i++)
+  /*for (int i = 0; i < n; i++)
     pf(path[i]), pfs("->");
 
-  pf(path[n]), pfs("\n");
+  pf(path[n]), pfs("\n");*/
   printf("cost : %lf\n", getCost());
 }
 
@@ -605,12 +602,19 @@ void threeOpt(int src) {
 
 
 int main() {
-  freopen("pr76.tsp", "r", stdin);
+  freopen("st70.tsp", "r", stdin);
+  freopen("1505107_out.txt", "a", stdout);
+
+  pfs("=============================================================\n");
+  pfs("st70\n");
+  pfs("=============================================================\n\n");
 
   srand(time(NULL));
 
+  double pr76 = 108159, berlin52 = 7542, st70 = 675;
+
   int i, j, k;
-  double x, y;
+  double x, y, optimal = st70, tmp;
   double best, worst, current_cost, avg_cost;
   int bst1, bst2;
 
@@ -646,7 +650,7 @@ int main() {
 
   avg_cost /= 5;
   cout << "Nearest Neighbour Heuristic-> best case:" << best << " , worst case:" << worst << ", avg case: " << avg_cost
-       << endl << endl;
+       << endl;
   pfs("----------------------------------------------------------------------\n\n");
 
   //savings heuristic
@@ -669,8 +673,7 @@ int main() {
   }
 
   avg_cost /= 5;
-  cout << "Savings Heuristic-> best case:" << best << " , worst case:" << worst << ", avg case: " << avg_cost << endl
-       << endl;
+  cout << "Savings Heuristic-> best case:" << best << " , worst case:" << worst << ", avg case: " << avg_cost << endl;
   pfs("----------------------------------------------------------------------\n\n");
 
 
@@ -697,7 +700,7 @@ int main() {
   avg_cost /= W2;
   cout << "started from: " << bst1 << endl;
   cout << "Randomized Nearest Neighbour Heuristic-> best case:" << best << " , worst case:" << worst << ", avg case: "
-       << avg_cost << endl << endl;
+       << avg_cost << endl;
   pfs("----------------------------------------------------------------------\n\n");
 
   //randomized savings
@@ -719,7 +722,7 @@ int main() {
   avg_cost /= W2;
   cout << "started from: " << bst2 << endl;
   cout << "Randomized Savings Heuristic-> best case:" << best << " , worst case:" << worst << ",avg case: " << avg_cost
-       << endl << endl;
+       << endl;
   pfs("----------------------------------------------------------------------\n\n");
 
 
@@ -728,7 +731,7 @@ int main() {
   //================================================================================
 
   //--------------------------------------------------------------------------------
-  //fast 2-opt on nearest neighbour
+  //first 2-opt on nearest neighbour
   ppd temp[W2];
   for (i = 0; i < W2; i++)
     temp[i] = {nearestNeighbourCosts[i], i};
@@ -750,10 +753,10 @@ int main() {
   }
 
   avg_cost /= 3;
-
+  tmp = (best * 100) / optimal;
+  cout << "percentage : " << tmp<<endl;
   cout << "First Two Opt on  Nearest Neighbour Heuristic-> best case:" << best << " , worst case:" << worst
-       << ", avg case: " << avg_cost << endl
-       << endl;
+       << ", avg case: " << avg_cost << endl;
   pfs("----------------------------------------------------------------------\n\n");
 
   //Best 2-opt
@@ -773,9 +776,10 @@ int main() {
   }
 
   avg_cost /= 3;
+  tmp = (best * 100) / optimal;
+  cout << "percentage : " << tmp<<endl;
   cout << "Best Two Opt on  Nearest Neighbour Heuristic-> best case:" << best << " , worst case:" << worst
-       << ", avg case: " << avg_cost << endl
-       << endl;
+       << ", avg case: " << avg_cost << endl;
   pfs("----------------------------------------------------------------------\n\n");
   //--------------------------------------------------------------------------------
 
@@ -801,8 +805,10 @@ int main() {
   }
 
   avg_cost /= 3;
+  tmp = (best * 100) / optimal;
+  cout << "percentage : " << tmp<<endl;
   cout << "First Two Opt on  Savings Heuristic-> best case:" << best << " , worst case:" << worst << ", avg case: "
-       << avg_cost << endl << endl;
+       << avg_cost << endl;
   pfs("----------------------------------------------------------------------\n\n");
 
   pfs("----------------------------------------------------------------------\n");
@@ -821,9 +827,11 @@ int main() {
   }
 
   avg_cost /= 3;
+  tmp = (best * 100) / optimal;
+  cout << "percentage : " << tmp <<endl;
   cout << "Best Two Opt on  Savings Heuristic-> best case:" << best << " , worst case:" << worst << ", avg case: "
-       << avg_cost << endl << endl;
-  pfs("----------------------------------------------------------------------\n\n");
+       << avg_cost << endl;
+  pfs("=============================================================\n\n\n");
   //--------------------------------------------------------------------------------
 
   return 0;
