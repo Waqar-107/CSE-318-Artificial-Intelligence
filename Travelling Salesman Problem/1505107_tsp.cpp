@@ -605,7 +605,7 @@ void threeOpt(int src) {
 
 
 int main() {
-  freopen("burma14.tsp", "r", stdin);
+  freopen("pr76.tsp", "r", stdin);
 
   srand(time(NULL));
 
