@@ -44,10 +44,21 @@ class Board(object):
         # ------------------------------------------------------
         # each of them would get at least q(possibly 0)
         for i in range(bin_quantity):
-            self.bin[1][i] += q
-            self.bin[2][i] += q
+            self.bin[playerNo][i] += q
+            self.bin[otherPlayer][i] += q
 
         self.storage[playerNo] += q
+
+        '''
+        special case : if the number of marbles is 13
+        then the last piece would fall in the bin where we started
+        and we get that piece as well as the piece in the opposite pit
+        '''
+        if tot == 13:
+            self.storage[playerNo] += 1
+            self.bin[playerNo][binNo] = 0
+            self.storage[playerNo] += self.bin[otherPlayer][bin_quantity - i + 1]
+            self.bin[otherPlayer][bin_quantity - i + 1] = 0
         # ------------------------------------------------------
 
         # ------------------------------------------------------
@@ -121,13 +132,21 @@ class Board(object):
 
         return False
 
-    def showGameResult(self):
+    def checkWinner(self):
         if self.storage[1] > self.storage[2]:
-            print("player-1 wins")
-        elif self.storage[1] == self.storage[2]:
-            print("tie")
+            return 1
+        elif self.storage[2] > self.storage[1]:
+            return 2
         else:
+            return 0
+
+    def showGameResult(self):
+        if self.checkWinner() == 1:
+            print("player-1 wins")
+        elif self.checkWinner() == 2:
             print("player-2 wins")
+        else:
+            print("tie")
 
         self.printBoard()
 

@@ -17,6 +17,9 @@ class Player(object):
         self.W4 = W4
         self.depth = depth
 
+        # additional move
+        self.additionalMoveEarned = None
+
         self.otherPlayer = 1
         if playerNo == 1:
             self.otherPlayer = 2
@@ -26,6 +29,7 @@ class Player(object):
             return self.__getHumanMove(board)
 
         elif self.playerType == alpha_beta_pruning:
+            self.additionalMoveEarned = 0
             bn = self.__MiniMax(board, self.depth, True, -inf, inf)
             print("AI selected:", bn)
             return bn
@@ -36,7 +40,16 @@ class Player(object):
 
     # minimax algorithm using alpha-beta pruning
     def __MiniMax(self, board, depth, isMax, alpha, beta):
-        if depth == 0 or board.gameOver(False):
+        # if the game is over and
+        if board.gameOver(False):
+            if board.checkWinner() == self.playerNo:
+                return win
+            elif board.checkWinner() == self.otherPlayer:
+                return -win
+            else:
+                return self.__evaluateNode()
+
+        if depth == 0:
             return self.__evaluateNode(board)
 
         # save a copy of the board
@@ -52,7 +65,9 @@ class Player(object):
 
                     # if additional turn achieved
                     if temp_bn == self.playerNo:
+                        self.additionalMoveEarned += 1
                         curr_value = self.__MiniMax(board, depth - 1, True, alpha, beta)
+                        self.additionalMoveEarned -= 1
                     else:
                         curr_value = self.__MiniMax(board, depth - 1, False, alpha, beta)
 
@@ -83,7 +98,9 @@ class Player(object):
 
                     # if other player gets an additional turn
                     if temp_bn == self.otherPlayer:
+                        self.additionalMoveEarned -= 1
                         curr_value = self.__MiniMax(board, depth - 1, False, alpha, beta)
+                        self.additionalMoveEarned += 1
                     else:
                         curr_value = self.__MiniMax(board, depth - 1, True, alpha, beta)
 
@@ -131,7 +148,7 @@ class Player(object):
         return ret
 
     def __HeuristicThree(self, board):
-        additional_move_earned = 0
+        additional_move_earned = self.additionalMoveEarned
         return self.__HeuristicTwo(board) + self.W3 * additional_move_earned
 
     def __HeuristicFour(self, board):
