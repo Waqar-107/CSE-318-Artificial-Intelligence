@@ -47,7 +47,7 @@ class Player(object):
             elif board.checkWinner() == self.otherPlayer:
                 return -win
             else:
-                return self.__evaluateNode()
+                return self.__evaluateNode(board)
 
         if depth == 0:
             return self.__evaluateNode(board)
@@ -145,6 +145,7 @@ class Player(object):
 
         ret = self.W1 * (stones_in_my_storage - stones_in_opponents_storage) + \
               self.W2 * (stones_on_my_side - stones_on_opponents_side)
+
         return ret
 
     def __HeuristicThree(self, board):
