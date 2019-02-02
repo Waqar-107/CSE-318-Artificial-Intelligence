@@ -40,7 +40,7 @@ class Player(object):
 
     # minimax algorithm using alpha-beta pruning
     def __MiniMax(self, board, depth, isMax, alpha, beta):
-        # if the game is over and
+        # if the game is over
         if board.gameOver(False):
             if board.checkWinner() == self.playerNo:
                 return win
@@ -92,7 +92,7 @@ class Player(object):
         else:
             best_value = inf
             for i in range(1, bin_quantity + 1):
-                if board.bin[self.playerNo][i] > 0:
+                if board.bin[self.otherPlayer][i] > 0:
                     # min is the opponent aka other-player
                     temp_bn = board.updateBoard(self.otherPlayer, i)
 

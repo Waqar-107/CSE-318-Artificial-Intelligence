@@ -57,8 +57,8 @@ class Board(object):
         if tot == 13:
             self.storage[playerNo] += 1
             self.bin[playerNo][binNo] = 0
-            self.storage[playerNo] += self.bin[otherPlayer][bin_quantity - i + 1]
-            self.bin[otherPlayer][bin_quantity - i + 1] = 0
+            self.storage[playerNo] += self.bin[otherPlayer][bin_quantity - binNo + 1]
+            self.bin[otherPlayer][bin_quantity - binNo + 1] = 0
         # ------------------------------------------------------
 
         # ------------------------------------------------------
